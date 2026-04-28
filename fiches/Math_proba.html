@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Révision – Probabilités Conditionnelles</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
+        :root {
+            --bg: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --card-hover: #22223a;
+            --accent-blue: #4fc3f7;
+            --accent-red: #ef5350;
+            --accent-gold: #ffd54f;
+            --accent-green: #66bb6a;
+            --accent-purple: #ab47bc;
+            --accent-orange: #ffa726;
+            --text: #e8e8f0;
+            --text-muted: #9e9eb8;
+            --border: rgba(255,255,255,0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(79,195,247,0.04) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(171,71,188,0.04) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(239,83,80,0.03) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            33% { transform: translate(2%,-2%) rotate(1deg); }
+            66% { transform: translate(-1%,1%) rotate(-1deg); }
+        }
+
+        /* HEADER */
+        .hero { text-align: center; padding: 60px 20px 40px; position: relative; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #fff; font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            padding: 6px 20px; border-radius: 30px; margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-blue) 50%, var(--accent-gold) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 10px;
+        }
+        .hero p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        /* TIMELINE */
+        .timeline-bar {
+            display: flex; justify-content: center; align-items: center;
+            gap: 0; margin: 30px auto; max-width: 700px; padding: 0 20px;
+        }
+        .timeline-node { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+        .timeline-node .dot {
+            width: 18px; height: 18px; border-radius: 50%; border: 3px solid;
+            background: var(--bg); transition: transform 0.3s;
+        }
+        .timeline-node:hover .dot { transform: scale(1.3); }
+        .timeline-node .label { font-size: 0.7rem; font-weight: 700; margin-top: 6px; white-space: nowrap; }
+        .timeline-line {
+            flex: 1; height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+            opacity: 0.4; min-width: 30px;
+        }
+
+        /* NAV */
+        .nav-tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 10px 20px 30px; }
+        .nav-tab {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 10px 22px; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .nav-tab::before {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 3px; background: var(--accent-blue);
+            transform: scaleX(0); transition: transform 0.3s;
+        }
+        .nav-tab:hover, .nav-tab.active { color: #fff; border-color: rgba(79,195,247,0.3); background: rgba(79,195,247,0.08); }
+        .nav-tab:hover::before, .nav-tab.active::before { transform: scaleX(1); }
+
+        /* SECTIONS */
+        .section { max-width: 900px; margin: 0 auto 50px; padding: 0 20px; animation: fadeUp 0.6s ease-out; }
+        .section.hidden { display: none; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .section-icon {
+            width: 50px; height: 50px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; flex-shrink: 0;
+        }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; }
+        .section-header .subtitle { font-size: 0.8rem; color: var(--text-muted); font-family: 'Inter', sans-serif; font-weight: 400; }
+
+        /* CARDS */
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 25px; margin-bottom: 16px;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; border-radius: 4px 0 0 4px;
+        }
+        .card:hover {
+            background: var(--card-hover); border-color: rgba(255,255,255,0.1);
+            transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card p, .card li { color: var(--text-muted); font-size: 0.92rem; line-height: 1.8; }
+        .card ul { list-style: none; padding: 0; }
+        .card ul li { padding: 6px 0 6px 24px; position: relative; }
+        .card ul li::before { content: '→'; position: absolute; left: 0; font-weight: 700; }
+
+        .card.blue::before { background: var(--accent-blue); }
+        .card.blue h3 { color: var(--accent-blue); }
+        .card.blue ul li::before { color: var(--accent-blue); }
+        .card.red::before { background: var(--accent-red); }
+        .card.red h3 { color: var(--accent-red); }
+        .card.red ul li::before { color: var(--accent-red); }
+        .card.gold::before { background: var(--accent-gold); }
+        .card.gold h3 { color: var(--accent-gold); }
+        .card.gold ul li::before { color: var(--accent-gold); }
+        .card.green::before { background: var(--accent-green); }
+        .card.green h3 { color: var(--accent-green); }
+        .card.green ul li::before { color: var(--accent-green); }
+        .card.purple::before { background: var(--accent-purple); }
+        .card.purple h3 { color: var(--accent-purple); }
+        .card.purple ul li::before { color: var(--accent-purple); }
+        .card.orange::before { background: var(--accent-orange); }
+        .card.orange h3 { color: var(--accent-orange); }
+        .card.orange ul li::before { color: var(--accent-orange); }
+
+        /* DATES GRID */
+        .dates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
+        .date-chip {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 16px; transition: all 0.3s; cursor: default;
+        }
+        .date-chip:hover { background: rgba(79,195,247,0.06); border-color: rgba(79,195,247,0.2); transform: translateY(-2px); }
+        .date-chip .year {
+            font-size: 1.3rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .date-chip .event { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+
+        /* DEF BOX */
+        .def-box {
+            background: rgba(171,71,188,0.08); border: 1px solid rgba(171,71,188,0.2);
+            border-radius: 12px; padding: 16px 20px; margin: 12px 0;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .def-box .def-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+        .def-box strong { color: var(--accent-purple); }
+        .def-box p { font-size: 0.88rem; color: var(--text-muted); }
+
+        /* HIGHLIGHTS */
+        .highlight { color: #fff; font-weight: 600; }
+        .hl-blue { color: var(--accent-blue); }
+        .hl-red { color: var(--accent-red); }
+        .hl-gold { color: var(--accent-gold); }
+        .hl-green { color: var(--accent-green); }
+        .hl-purple { color: var(--accent-purple); }
+        .hl-orange { color: var(--accent-orange); }
+
+        /* VS BOX */
+        .vs-container { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: stretch; margin: 16px 0; }
+        .vs-side { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+        .vs-side h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+        .vs-side ul { list-style: none; padding: 0; }
+        .vs-side ul li { font-size: 0.85rem; color: var(--text-muted); padding: 4px 0; }
+        .vs-badge {
+            align-self: center;
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+            color: #fff; font-weight: 900; font-size: 1.1rem;
+            width: 45px; height: 45px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* STATS BAR */
+        .stat-bar { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; }
+        .stat-item {
+            flex: 1; min-width: 140px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+            text-align: center; transition: all 0.3s;
+        }
+        .stat-item:hover { background: rgba(255,213,79,0.06); border-color: rgba(255,213,79,0.2); }
+        .stat-item .number {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-item .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* QUIZ */
+        .quiz-card {
+            background: linear-gradient(135deg, rgba(79,195,247,0.08), rgba(171,71,188,0.08));
+            border: 1px solid rgba(79,195,247,0.15); border-radius: 16px; padding: 25px; margin-bottom: 14px;
+        }
+        .quiz-card .question { font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .quiz-card .question .q-num {
+            background: var(--accent-blue); color: #000; font-size: 0.75rem; font-weight: 800;
+            width: 24px; height: 24px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .answer-reveal {
+            background: rgba(0,0,0,0.3); border-radius: 10px; padding: 14px 18px;
+            font-size: 0.88rem; color: var(--text-muted); cursor: pointer;
+            transition: all 0.3s; position: relative; overflow: hidden; min-height: 50px;
+        }
+        .answer-reveal .answer-text { opacity: 0; transition: opacity 0.3s; }
+        .answer-reveal .click-hint {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 0.8rem; color: var(--accent-blue); font-weight: 600; transition: opacity 0.3s;
+        }
+        .answer-reveal.revealed .answer-text { opacity: 1; }
+        .answer-reveal.revealed .click-hint { opacity: 0; }
+        .answer-reveal:hover { background: rgba(79,195,247,0.06); }
+
+        /* CONTRADICTION */
+        .contradiction { background: rgba(239,83,80,0.06); border: 1px solid rgba(239,83,80,0.15); border-radius: 14px; padding: 20px; margin: 16px 0; }
+        .contradiction h4 { color: var(--accent-red); font-size: 0.95rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .contradiction .items { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .contradiction .item { font-size: 0.85rem; color: var(--text-muted); padding: 10px 14px; border-radius: 10px; }
+        .contradiction .item.positive { background: rgba(102,187,106,0.08); border: 1px solid rgba(102,187,106,0.15); }
+        .contradiction .item.negative { background: rgba(239,83,80,0.08); border: 1px solid rgba(239,83,80,0.15); }
+        .contradiction .item strong { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .contradiction .item.positive strong { color: var(--accent-green); }
+        .contradiction .item.negative strong { color: var(--accent-red); }
+
+        /* FORMULA BOX */
+        .formula-box {
+            background: rgba(79,195,247,0.06); border: 1px solid rgba(79,195,247,0.2);
+            border-radius: 14px; padding: 20px 24px; margin: 14px 0; text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.4rem; font-weight: 800; color: var(--accent-blue);
+            letter-spacing: 0.5px; margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+        }
+        .formula-box .formula-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+        /* TABLE */
+        .prob-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.85rem; }
+        .prob-table th {
+            background: rgba(79,195,247,0.12); color: var(--accent-blue);
+            padding: 10px 14px; text-align: center; font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .prob-table td {
+            padding: 10px 14px; text-align: center; color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .prob-table tr:hover td { background: rgba(255,255,255,0.03); color: var(--text); }
+        .prob-table td.highlight-cell { color: var(--accent-gold); font-weight: 700; }
+        .prob-table td.total-cell { color: var(--accent-green); font-weight: 700; background: rgba(102,187,106,0.05); }
+        .prob-table th.total-th { background: rgba(102,187,106,0.12); color: var(--accent-green); }
+
+        /* VOCAB GRID */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 16px; transition: all 0.3s;
+        }
+        .vocab-item:hover { background: rgba(171,71,188,0.06); border-color: rgba(171,71,188,0.2); transform: translateY(-2px); }
+        .vocab-item .term { font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; }
+        .vocab-item .def { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* PROGRESS BAR */
+        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 1000; background: rgba(255,255,255,0.05); }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-gold)); width: 0%; transition: width 0.1s; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        /* FOOTER */
+        .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .vs-container { grid-template-columns: 1fr; }
+            .vs-badge { justify-self: center; }
+            .contradiction .items { grid-template-columns: 1fr; }
+            .dates-grid { grid-template-columns: repeat(2, 1fr); }
+            .vocab-grid { grid-template-columns: 1fr; }
+        }
+
+        /* TAG */
+        .tag {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: 8px;
+        }
+        .tag.blue { background: rgba(79,195,247,0.15); color: var(--accent-blue); }
+        .tag.gold { background: rgba(255,213,79,0.15); color: var(--accent-gold); }
+        .tag.green { background: rgba(102,187,106,0.15); color: var(--accent-green); }
+        .tag.red { background: rgba(239,83,80,0.15); color: var(--accent-red); }
+        .tag.purple { background: rgba(171,71,188,0.15); color: var(--accent-purple); }
+        .tag.orange { background: rgba(255,167,38,0.15); color: var(--accent-orange); }
+
+        /* NOTE BOX */
+        .note-box {
+            background: rgba(255,213,79,0.06); border: 1px solid rgba(255,213,79,0.2);
+            border-radius: 12px; padding: 14px 18px; margin: 12px 0;
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+        .note-box .note-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .note-box p { font-size: 0.85rem; color: var(--text-muted); }
+        .note-box strong { color: var(--accent-gold); }
+
+        .venn-container {
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; margin: 16px 0;
+        }
+        .venn-svg { max-width: 340px; width: 100%; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">1ère STI2D / STL · Mathématiques</div>
+    <h1>Probabilités Conditionnelles</h1>
+    <p>Fiche de révision complète · Chapitre 12 · Vocabulaire, formules, exemples et quiz</p>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-bar">
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-blue);"></div>
+        <div class="label" style="color: var(--accent-blue);">Vocabulaire</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-purple);"></div>
+        <div class="label" style="color: var(--accent-purple);">Définition</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-gold);"></div>
+        <div class="label" style="color: var(--accent-gold);">Formules</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-orange);"></div>
+        <div class="label" style="color: var(--accent-orange);">Tests diag.</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-green);"></div>
+        <div class="label" style="color: var(--accent-green);">Quiz</div>
+    </div>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('vocab')">🎲 Vocabulaire</button>
+    <button class="nav-tab" onclick="showSection('proba-cond')">🔗 Prob. Conditionnelles</button>
+    <button class="nav-tab" onclick="showSection('formules')">📐 Formules Clés</button>
+    <button class="nav-tab" onclick="showSection('tests')">🏥 Tests Diagnostiques</button>
+    <button class="nav-tab" onclick="showSection('exercices')">✏️ Exercices Corrigés</button>
+    <button class="nav-tab" onclick="showSection('quiz')">⚡ Quiz Rapide</button>
+</nav>
+
+<!-- ===================== SECTION 1 : VOCABULAIRE ===================== -->
+<div class="section" id="vocab">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(79,195,247,0.12);">🎲</div>
+        <div>
+            <h2 style="color: var(--accent-blue);">Vocabulaire des Probabilités</h2>
+            <div class="subtitle">Rappels fondamentaux · Univers, Événements, Opérations</div>
+        </div>
+    </div>
+
+    <div class="card blue">
+        <h3>🌐 Univers Ω</h3>
+        <p>L'<span class="hl-blue">univers Ω</span> est l'<strong class="highlight">ensemble de toutes les issues possibles</strong> d'une expérience aléatoire.</p>
+        <p style="margin-top:10px;">Exemple — lancer un dé cubique : <span class="hl-gold">Ω = {1 ; 2 ; 3 ; 4 ; 5 ; 6}</span>, donc <span class="hl-blue">Card(Ω) = 6</span></p>
+    </div>
+
+    <div class="vocab-grid">
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-blue);">Événement A</div>
+            <div class="def">Une <strong>partie de l'univers</strong> Ω. Exemple : A = « obtenir un nombre pair » → A = {2 ; 4 ; 6}</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-gold);">Cardinal Card(A)</div>
+            <div class="def">= effectif = <strong>nombre d'éléments</strong> (= nombre d'issues) de l'événement A.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-purple);">Intersection A ∩ B</div>
+            <div class="def">Événements A <strong>et</strong> B réalisés <strong>en même temps</strong>. A ∩ B = issues communes à A et B.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-green);">Réunion A ∪ B</div>
+            <div class="def">Événement A <strong>ou</strong> B réalisé (au moins l'un des deux). A ∪ B = toutes les issues de A ou de B.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-red);">Contraire B̄</div>
+            <div class="def">Événement qui se réalise quand B <strong>ne se réalise pas</strong>. p(B) + p(B̄) = 1</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--text-muted);">Événement impossible</div>
+            <div class="def">Ensemble vide ∅. Exemple : C = « obtenir un 7 » avec un dé → p(C) = p(∅) = 0</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-orange);">Événement certain</div>
+            <div class="def">D = Ω, se réalise toujours. Exemple : D = « obtenir un nombre &lt; 10 » → p(D) = 1</div>
+        </div>
+        <div class="vocab-item">
+            <div class="term" style="color: var(--accent-blue);">Probabilité p(A)</div>
+            <div class="def"><strong>p(A) = Card(A) / Card(Ω)</strong> quand toutes les issues sont équiprobables.</div>
+        </div>
+    </div>
+
+    <!-- Exemple concret dé -->
+    <div class="card gold" style="margin-top:20px;">
+        <h3>🎲 Exemple complet — Dé cubique</h3>
+        <p style="margin-bottom:12px;">Ω = {1;2;3;4;5;6} · A = nombre pair = {2;4;6} · B = nombre ≥ 3 = {3;4;5;6}</p>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th>Événement</th>
+                    <th>Ensemble</th>
+                    <th>Cardinal</th>
+                    <th>Probabilité</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ω</td>
+                    <td>{1;2;3;4;5;6}</td>
+                    <td class="highlight-cell">6</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>A (pair)</td>
+                    <td>{2;4;6}</td>
+                    <td class="highlight-cell">3</td>
+                    <td class="highlight-cell">3/6 = 1/2</td>
+                </tr>
+                <tr>
+                    <td>B (≥ 3)</td>
+                    <td>{3;4;5;6}</td>
+                    <td class="highlight-cell">4</td>
+                    <td class="highlight-cell">4/6 = 2/3</td>
+                </tr>
+                <tr>
+                    <td>A ∩ B</td>
+                    <td>{4;6}</td>
+                    <td class="highlight-cell">2</td>
+                    <td class="highlight-cell">2/6 = 1/3</td>
+                </tr>
+                <tr>
+                    <td>A ∪ B</td>
+                    <td>{2;3;4;5;6}</td>
+                    <td class="highlight-cell">5</td>
+                    <td class="highlight-cell">5/6</td>
+                </tr>
+                <tr>
+                    <td>B̄ (contraire)</td>
+                    <td>{1;2}</td>
+                    <td class="highlight-cell">2</td>
+                    <td class="highlight-cell">2/6 = 1/3</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula">p(A ∪ B) = p(A) + p(B) − p(A ∩ B)</div>
+        <div class="formula-desc">Propriété fondamentale — Pour ne pas compter A ∩ B deux fois</div>
+    </div>
+
+    <!-- Diagramme de Venn SVG -->
+    <div class="card blue">
+        <h3>🔵 Diagramme de Venn — Visualisation</h3>
+        <div class="venn-container">
+            <svg class="venn-svg" viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Ω -->
+                <rect x="5" y="5" width="330" height="190" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                <text x="310" y="25" fill="#9e9eb8" font-size="13" font-weight="700" font-family="Inter">Ω</text>
+                <!-- Circle A -->
+                <circle cx="130" cy="100" r="70" fill="rgba(79,195,247,0.18)" stroke="#4fc3f7" stroke-width="2"/>
+                <!-- Circle B -->
+                <circle cx="210" cy="100" r="70" fill="rgba(171,71,188,0.18)" stroke="#ab47bc" stroke-width="2"/>
+                <!-- Intersection highlight -->
+                <clipPath id="clipA"><circle cx="130" cy="100" r="70"/></clipPath>
+                <circle cx="210" cy="100" r="70" fill="rgba(255,213,79,0.25)" clip-path="url(#clipA)"/>
+                <!-- Labels -->
+                <text x="88" y="95" fill="#4fc3f7" font-size="14" font-weight="800" font-family="Inter">A</text>
+                <text x="80" y="112" fill="#9e9eb8" font-size="10" font-family="Inter">seulement</text>
+                <text x="236" y="95" fill="#ab47bc" font-size="14" font-weight="800" font-family="Inter">B</text>
+                <text x="228" y="112" fill="#9e9eb8" font-size="10" font-family="Inter">seulement</text>
+                <text x="158" y="95" fill="#ffd54f" font-size="12" font-weight="800" font-family="Inter">A∩B</text>
+                <text x="152" y="112" fill="#ffd54f" font-size="10" font-family="Inter">les deux</text>
+            </svg>
+        </div>
+        <p style="text-align:center; font-size:0.82rem;">La zone <span class="hl-gold">jaune</span> = A ∩ B · La zone <span class="hl-blue">bleue</span> seule = A sans B · La zone <span class="hl-purple">violette</span> seule = B sans A</p>
+    </div>
+</div>
+
+<!-- ===================== SECTION 2 : PROBA CONDITIONNELLES ===================== -->
+<div class="section hidden" id="proba-cond">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(171,71,188,0.12);">🔗</div>
+        <div>
+            <h2 style="color: var(--accent-purple);">Probabilités Conditionnelles</h2>
+            <div class="subtitle">Probabilité d'un événement sachant qu'un autre est réalisé</div>
+        </div>
+    </div>
+
+    <!-- Activité hôpital -->
+    <div class="card purple">
+        <h3>🏥 Activité d'introduction — Hôpital</h3>
+        <p style="margin-bottom:14px;">Dans un hôpital, des patients atteints d'une même maladie sont traités avec le médicament <span class="hl-blue">α</span> ou le médicament <span class="hl-red">β</span>. Tableau des résultats sur 5 ans :</p>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="color: var(--accent-blue);">Médicament α</th>
+                    <th style="color: var(--accent-red);">Médicament β</th>
+                    <th class="total-th">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight:700; color: var(--accent-green);">Guéri</td>
+                    <td class="highlight-cell">241</td>
+                    <td>186</td>
+                    <td class="total-cell">427</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700; color: var(--accent-red);">Non guéri</td>
+                    <td>108</td>
+                    <td>65</td>
+                    <td class="total-cell">173</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700;">Total</td>
+                    <td class="total-cell">349</td>
+                    <td class="total-cell">251</td>
+                    <td class="total-cell">600</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top:10px; font-size:0.82rem;">α : « le patient a pris le médicament α » · G : « le patient est guéri »</p>
+    </div>
+
+    <!-- Expérience 1 -->
+    <div class="card blue">
+        <h3>🎯 1ère expérience — On tire une fiche au hasard (600 fiches)</h3>
+        <ul>
+            <li><span class="hl-blue">p(α)</span> = 349/600 ≈ <span class="hl-gold">0,58</span> — probabilité d'avoir pris α</li>
+            <li><span class="hl-green">p(G)</span> = 427/600 ≈ <span class="hl-gold">0,71</span> — probabilité d'être guéri</li>
+            <li><span class="hl-purple">p(α ∩ G)</span> = 241/600 ≈ <span class="hl-gold">0,40</span> — guéri ET a pris α</li>
+            <li><span class="hl-red">p(α ∩ Ḡ)</span> = 108/600 ≈ <span class="hl-gold">0,18</span> — non guéri ET a pris α</li>
+        </ul>
+    </div>
+
+    <!-- Expérience 2 -->
+    <div class="card green">
+        <h3>🎯 2ème expérience — On tire la fiche d'un patient GUÉRI</h3>
+        <p style="margin-bottom:12px;">On restreint l'univers aux <span class="hl-green">427 patients guéris</span> uniquement.</p>
+        <div class="formula-box">
+            <div class="formula" style="font-size:1.1rem; color: var(--accent-green);">p<sub>G</sub>(α) = 241/427 ≈ 0,56</div>
+            <div class="formula-desc">Probabilité d'avoir pris α, sachant que le patient est guéri → On lit seulement la <strong>ligne des guéris</strong></div>
+        </div>
+        <div class="formula-box" style="margin-top:10px;">
+            <div class="formula" style="font-size:1.1rem; color: var(--accent-red);">p<sub>β</sub>(G) = 186/251 ≈ 0,74</div>
+            <div class="formula-desc">Probabilité d'être guéri, sachant que le patient a pris β → On lit seulement la <strong>colonne de β</strong></div>
+        </div>
+    </div>
+
+    <!-- Définition officielle -->
+    <div class="def-box" style="margin: 20px 0;">
+        <div class="def-icon">📌</div>
+        <div>
+            <strong>Définition — Probabilité Conditionnelle</strong>
+            <p style="margin-top:6px;">La probabilité que l'événement <strong style="color:var(--accent-purple);">B</strong> se réalise <em>sachant que</em> l'événement <strong style="color:var(--accent-blue);">A</strong> est réalisé, notée <strong style="color:var(--accent-gold);">p<sub>A</sub>(B)</strong>, est définie par :</p>
+        </div>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula">p<sub>A</sub>(B) = Card(A ∩ B) / Card(A)</div>
+        <div class="formula-desc" style="margin-top:6px;">Se lit « p de B sachant A » · L'ensemble de référence n'est plus Ω mais <strong style="color:var(--accent-blue);">A</strong></div>
+    </div>
+
+    <div class="note-box">
+        <div class="note-icon">💡</div>
+        <p><strong>Remarque :</strong> Avec les probabilités conditionnelles, l'ensemble de référence n'est plus Ω, mais <strong>A</strong>. On « restreint » l'univers à l'événement A.</p>
+    </div>
+
+    <!-- Exemple dé -->
+    <div class="card gold">
+        <h3>🎲 Exemple — Dé cubique avec probabilité conditionnelle</h3>
+        <p>A = « nombre pair » = {2;4;6} · B = « nombre ≥ 3 »</p>
+        <p style="margin-top:8px;">Sachant que le dé est pair, quelle est la probabilité qu'il soit ≥ 3 ?</p>
+        <div class="formula-box" style="margin-top:12px;">
+            <div class="formula" style="font-size:1rem; color: var(--accent-gold);">p<sub>A</sub>(B) = Card(A ∩ B) / Card(A) = 2/3</div>
+            <div class="formula-desc">A ∩ B = {4;6} (pairs ET ≥ 3) → Card = 2 · Card(A) = 3 · Parmi les 3 dés pairs (2,4,6), 2 sont ≥ 3 (4 et 6)</div>
+        </div>
+    </div>
+
+    <div class="vs-container">
+        <div class="vs-side">
+            <h4 style="color: var(--accent-blue);">🌐 Probabilité classique p(B)</h4>
+            <ul>
+                <li>Référence : tout l'univers Ω</li>
+                <li>Card(Ω) au dénominateur</li>
+                <li>p(B) = Card(B) / Card(Ω)</li>
+                <li>Exemple : p(B) = 4/6 = 2/3</li>
+            </ul>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="vs-side">
+            <h4 style="color: var(--accent-purple);">🔗 Prob. conditionnelle p<sub>A</sub>(B)</h4>
+            <ul>
+                <li>Référence : événement A uniquement</li>
+                <li>Card(A) au dénominateur</li>
+                <li>p<sub>A</sub>(B) = Card(A ∩ B) / Card(A)</li>
+                <li>Exemple : p<sub>A</sub>(B) = 2/3</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== SECTION 3 : FORMULES ===================== -->
+<div class="section hidden" id="formules">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(255,213,79,0.12);">📐</div>
+        <div>
+            <h2 style="color: var(--accent-gold);">Formules Clés</h2>
+            <div class="subtitle">Toutes les formules à retenir pour l'examen</div>
+        </div>
+    </div>
+
+    <div class="stat-bar">
+        <div class="stat-item">
+            <div class="number">5</div>
+            <div class="label">Formules essentielles</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">3</div>
+            <div class="label">Propriétés importantes</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">2</div>
+            <div class="label">Notations à maîtriser</div>
+        </div>
+    </div>
+
+    <div class="card gold">
+        <h3>⭐ Formule principale — Probabilité conditionnelle</h3>
+        <div class="formula-box">
+            <div class="formula">p<sub>A</sub>(B) = Card(A ∩ B) / Card(A)</div>
+            <div class="formula-desc">Probabilité de B sachant A · Valable quand les issues sont équiprobables</div>
+        </div>
+        <div class="formula-box" style="background: rgba(171,71,188,0.06); border-color: rgba(171,71,188,0.2);">
+            <div class="formula" style="color: var(--accent-purple);">p<sub>A</sub>(B) = p(A ∩ B) / p(A)</div>
+            <div class="formula-desc">Formule générale avec les probabilités (pas seulement les cardinaux)</div>
+        </div>
+    </div>
+
+    <div class="card blue">
+        <h3>🔵 Formule de la réunion</h3>
+        <div class="formula-box">
+            <div class="formula">p(A ∪ B) = p(A) + p(B) − p(A ∩ B)</div>
+            <div class="formula-desc">Évite de compter A ∩ B deux fois · Valable pour tous les événements</div>
+        </div>
+        <p style="margin-top:8px;">Cas particulier — si A et B sont <span class="hl-blue">incompatibles</span> (A ∩ B = ∅) :</p>
+        <div class="formula-box" style="margin-top:8px; background: rgba(79,195,247,0.04);">
+            <div class="formula" style="font-size:1.1rem;">p(A ∪ B) = p(A) + p(B)</div>
+        </div>
+    </div>
+
+    <div class="card red">
+        <h3>🔴 Formule du contraire</h3>
+        <div class="formula-box" style="background: rgba(239,83,80,0.06); border-color: rgba(239,83,80,0.2);">
+            <div class="formula" style="color: var(--accent-red);">p(B) + p(B̄) = 1</div>
+            <div class="formula-desc">Toujours vrai · Très utile pour calculer p(B̄) = 1 − p(B)</div>
+        </div>
+    </div>
+
+    <div class="card green">
+        <h3>🟢 Probabilité classique (équiprobabilité)</h3>
+        <div class="formula-box" style="background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.2);">
+            <div class="formula" style="color: var(--accent-green);">p(A) = Card(A) / Card(Ω)</div>
+            <div class="formula-desc">Valable uniquement si toutes les issues sont équiprobables</div>
+        </div>
+    </div>
+
+    <div class="card orange">
+        <h3>🟠 Formule des probabilités totales (à retenir)</h3>
+        <div class="formula-box" style="background: rgba(255,167,38,0.06); border-color: rgba(255,167,38,0.2);">
+            <div class="formula" style="color: var(--accent-orange); font-size:1rem;">p(B) = p(A ∩ B) + p(Ā ∩ B)</div>
+            <div class="formula-desc">Si A et Ā forment une partition de Ω · p(B) = p<sub>A</sub>(B)·p(A) + p<sub>Ā</sub>(B)·p(Ā)</div>
+        </div>
+    </div>
+
+    <!-- Tableau récapitulatif notation -->
+    <div class="card purple">
+        <h3>📋 Récapitulatif des notations</h3>
+        <table class="prob-table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>Notation</th>
+                    <th>Se lit</th>
+                    <th>Signification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="highlight-cell">p(A)</td>
+                    <td>probabilité de A</td>
+                    <td style="text-align:left; padding-left:20px;">Probabilité que A se réalise</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">p<sub>A</sub>(B)</td>
+                    <td>p de B sachant A</td>
+                    <td style="text-align:left; padding-left:20px;">Probabilité de B si on sait que A est réalisé</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">A ∩ B</td>
+                    <td>A inter B</td>
+                    <td style="text-align:left; padding-left:20px;">A ET B simultanément</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">A ∪ B</td>
+                    <td>A union B</td>
+                    <td style="text-align:left; padding-left:20px;">A OU B (au moins l'un)</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">B̄ ou B̄</td>
+                    <td>B barre / contraire de B</td>
+                    <td style="text-align:left; padding-left:20px;">B ne se réalise pas</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">∅</td>
+                    <td>ensemble vide</td>
+                    <td style="text-align:left; padding-left:20px;">Événement impossible, p(∅) = 0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-box">
+        <div class="note-icon">⚠️</div>
+        <p><strong>Attention !</strong> p<sub>A</sub>(B) ≠ p<sub>B</sub>(A) en général. L'ordre compte ! « p de B sachant A » est différent de « p de A sachant B ».</p>
+    </div>
+</div>
+
+<!-- ===================== SECTION 4 : TESTS DIAGNOSTIQUES ===================== -->
+<div class="section hidden" id="tests">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(239,83,80,0.12);">🏥</div>
+        <div>
+            <h2 style="color: var(--accent-red);">Tests Diagnostiques</h2>
+            <div class="subtitle">Application aux tests médicaux · Faux positifs, Sensibilité, Spécificité</div>
+        </div>
+    </div>
+
+    <div class="note-box" style="background: rgba(239,83,80,0.06); border-color: rgba(239,83,80,0.2);">
+        <div class="note-icon">🔬</div>
+        <p><strong style="color: var(--accent-red);">Contexte :</strong> Un test médical peut détecter ou non une maladie M. Il peut donner un résultat positif (T) ou négatif (T̄). Il peut se tromper.</p>
+    </div>
+
+    <div class="dates-grid" style="margin: 20px 0;">
+        <div class="date-chip">
+            <div class="year" style="background: linear-gradient(135deg, var(--accent-red), var(--accent-orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">M</div>
+            <div class="event">Patient <strong>malade</strong> (M se réalise)</div>
+        </div>
+        <div class="date-chip">
+            <div class="year" style="background: linear-gradient(135deg, var(--accent-green), var(--accent-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">M̄</div>
+            <div class="event">Patient <strong>non malade</strong> (M ne se réalise pas)</div>
+        </div>
+        <div class="date-chip">
+            <div class="year" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">T</div>
+            <div class="event">Test <strong>positif</strong></div>
+        </div>
+        <div class="date-chip">
+            <div class="year" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">T̄</div>
+            <div class="event">Test <strong>négatif</strong></div>
+        </div>
+    </div>
+
+    <div class="contradiction">
+        <h4>⚠️ Les deux types d'erreurs d'un test</h4>
+        <div class="items">
+            <div class="item negative">
+                <strong>Faux positif</strong>
+                Test positif (T) alors que le patient n'est PAS malade (M̄). Le test dit « malade » à tort.
+            </div>
+            <div class="item negative">
+                <strong>Faux négatif</strong>
+                Test négatif (T̄) alors que le patient EST malade (M). Le test dit « sain » à tort — plus dangereux !
+            </div>
+            <div class="item positive">
+                <strong>Vrai positif</strong>
+                Test positif (T) ET patient malade (M). Détection correcte.
+            </div>
+            <div class="item positive">
+                <strong>Vrai négatif</strong>
+                Test négatif (T̄) ET patient non malade (M̄). Exclusion correcte.
+            </div>
+        </div>
+    </div>
+
+    <div class="card red">
+        <h3>📊 Les 3 indicateurs clés d'un test</h3>
+        <div class="formula-box" style="background: rgba(79,195,247,0.06); border-color: rgba(79,195,247,0.2); margin-bottom:12px;">
+            <div class="formula" style="font-size:1rem; color: var(--accent-blue);">Sensibilité = p<sub>M</sub>(T)</div>
+            <div class="formula-desc">Probabilité que le test soit <strong>positif</strong> sachant que le patient est <strong>malade</strong>. Une bonne sensibilité = peu de faux négatifs.</div>
+        </div>
+        <div class="formula-box" style="background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.2); margin-bottom:12px;">
+            <div class="formula" style="font-size:1rem; color: var(--accent-green);">Spécificité = p<sub>M̄</sub>(T̄)</div>
+            <div class="formula-desc">Probabilité que le test soit <strong>négatif</strong> sachant que le patient est <strong>non malade</strong>. Une bonne spécificité = peu de faux positifs.</div>
+        </div>
+        <div class="formula-box" style="background: rgba(255,213,79,0.06); border-color: rgba(255,213,79,0.2);">
+            <div class="formula" style="font-size:1rem; color: var(--accent-gold);">Efficacité = p(M ∩ T) + p(M̄ ∩ T̄)</div>
+            <div class="formula-desc">Probabilité que le test donne le bon résultat (vrai positif OU vrai négatif).</div>
+        </div>
+    </div>
+
+    <div class="card purple">
+        <h3>🧠 Mémo — Comment retenir les formules</h3>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th>Indicateur</th>
+                    <th>Formule</th>
+                    <th>Mnémotechnique</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color: var(--accent-blue); font-weight:700;">Sensibilité</td>
+                    <td class="highlight-cell">p<sub>M</sub>(T)</td>
+                    <td style="color: var(--text-muted); text-align:left; padding-left:12px;">Parmi les <u>malades</u>, combien sont détectés ?</td>
+                </tr>
+                <tr>
+                    <td style="color: var(--accent-green); font-weight:700;">Spécificité</td>
+                    <td class="highlight-cell">p<sub>M̄</sub>(T̄)</td>
+                    <td style="color: var(--text-muted); text-align:left; padding-left:12px;">Parmi les <u>non malades</u>, combien sont correctement exclus ?</td>
+                </tr>
+                <tr>
+                    <td style="color: var(--accent-gold); font-weight:700;">Efficacité</td>
+                    <td class="highlight-cell">p(M∩T) + p(M̄∩T̄)</td>
+                    <td style="color: var(--text-muted); text-align:left; padding-left:12px;">Vrais positifs + Vrais négatifs sur l'ensemble</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ===================== SECTION 5 : EXERCICES CORRIGÉS ===================== -->
+<div class="section hidden" id="exercices">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(102,187,106,0.12);">✏️</div>
+        <div>
+            <h2 style="color: var(--accent-green);">Exercices Corrigés</h2>
+            <div class="subtitle">4 exercices types avec solutions détaillées</div>
+        </div>
+    </div>
+
+    <!-- Exercice 1 -->
+    <div class="card blue">
+        <h3>📝 Exercice 1 — Cardinaux donnés <span class="tag blue">Niveau 1</span></h3>
+        <p>Soient A et B deux événements d'une même expérience aléatoire tels que :</p>
+        <p style="margin: 10px 0;"><span class="hl-gold">Card(A) = 6</span>, <span class="hl-gold">Card(B) = 8</span> et <span class="hl-gold">Card(A ∩ B) = 3</span>.</p>
+        <p>Calculer p<sub>A</sub>(B) et p<sub>B</sub>(A).</p>
+        <div class="formula-box" style="margin-top:14px; text-align:left; padding:16px 20px;">
+            <p style="color: var(--text-muted); font-size:0.88rem; margin-bottom:8px;"><strong style="color:var(--accent-blue);">Solution :</strong></p>
+            <p style="color: var(--text-muted); font-size:0.88rem;">p<sub>A</sub>(B) = Card(A ∩ B) / Card(A) = <span class="hl-gold">3/6 = 1/2</span></p>
+            <p style="color: var(--text-muted); font-size:0.88rem; margin-top:6px;">p<sub>B</sub>(A) = Card(A ∩ B) / Card(B) = <span class="hl-gold">3/8</span></p>
+            <div class="note-box" style="margin-top:10px;">
+                <div class="note-icon">💡</div>
+                <p>Le numérateur est toujours <strong>Card(A ∩ B)</strong>. Seul le dénominateur change selon l'événement « sachant ».</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercice 2 -->
+    <div class="card purple">
+        <h3>📝 Exercice 2 — Tableau puces électroniques <span class="tag purple">Niveau 2</span></h3>
+        <p style="margin-bottom:12px;">Une usine fabrique deux types de puces (A et B). On prélève au hasard un lot de 100 puces.</p>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="color: var(--accent-blue);">Type A</th>
+                    <th style="color: var(--accent-red);">Type B</th>
+                    <th class="total-th">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight:700; color: var(--accent-red);">Défaut</td>
+                    <td>5</td>
+                    <td>12</td>
+                    <td class="total-cell">17</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700; color: var(--accent-green);">Sans défaut</td>
+                    <td>35</td>
+                    <td>48</td>
+                    <td class="total-cell">83</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700;">Total</td>
+                    <td class="total-cell">40</td>
+                    <td class="total-cell">60</td>
+                    <td class="total-cell">100</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top:14px;">
+            <p style="font-weight:700; color: var(--accent-purple); margin-bottom:8px;">Calculer la probabilité que la puce soit :</p>
+            <ul>
+                <li><span class="hl-blue">a) De type A :</span> 40/100 = <span class="hl-gold">0,4</span></li>
+                <li><span class="hl-red">b) Avec un défaut :</span> 17/100 = <span class="hl-gold">0,17</span></li>
+                <li><span class="hl-purple">c) De type A sachant qu'elle a un défaut :</span> p<sub>D</sub>(A) = Card(A∩D)/Card(D) = 5/17 ≈ <span class="hl-gold">0,29</span></li>
+                <li><span class="hl-orange">d) De type A ET avec un défaut :</span> p(A∩D) = 5/100 = <span class="hl-gold">0,05</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Exercice 3 -->
+    <div class="card gold">
+        <h3>📝 Exercice 3 — Diagramme de Venn <span class="tag gold">Niveau 2</span></h3>
+        <p style="margin-bottom:12px;">Deux événements A et B représentés avec les nombres d'éléments dans chaque zone. On choisit un élément de Ω au hasard.</p>
+        <div class="venn-container">
+            <svg class="venn-svg" viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="330" height="190" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                <text x="308" y="25" fill="#9e9eb8" font-size="13" font-weight="700" font-family="Inter">Ω</text>
+                <circle cx="130" cy="100" r="70" fill="rgba(79,195,247,0.15)" stroke="#4fc3f7" stroke-width="2"/>
+                <circle cx="210" cy="100" r="70" fill="rgba(171,71,188,0.15)" stroke="#ab47bc" stroke-width="2"/>
+                <clipPath id="clipA2"><circle cx="130" cy="100" r="70"/></clipPath>
+                <circle cx="210" cy="100" r="70" fill="rgba(255,213,79,0.3)" clip-path="url(#clipA2)"/>
+                <text x="82" y="105" fill="#4fc3f7" font-size="22" font-weight="900" font-family="Inter">2</text>
+                <text x="161" y="105" fill="#ffd54f" font-size="22" font-weight="900" font-family="Inter">3</text>
+                <text x="236" y="105" fill="#ab47bc" font-size="22" font-weight="900" font-family="Inter">10</text>
+                <text x="290" y="105" fill="#9e9eb8" font-size="18" font-weight="700" font-family="Inter">B</text>
+                <text x="86" y="145" fill="#9e9eb8" font-size="11" font-family="Inter">A seul</text>
+                <text x="234" y="145" fill="#9e9eb8" font-size="11" font-family="Inter">B seul</text>
+            </svg>
+        </div>
+        <ul>
+            <li><span class="hl-blue">a) Card(A)</span> = 2 + 3 = <span class="hl-gold">5</span></li>
+            <li><span class="hl-purple">b) Card(B)</span> = 10 + 3 = <span class="hl-gold">13</span></li>
+            <li><span class="hl-gold">c) Card(A ∩ B)</span> = <span class="hl-gold">3</span></li>
+            <li><span class="hl-blue">d) p<sub>A</sub>(B)</span> = Card(A∩B)/Card(A) = 3/5 = <span class="hl-gold">0,6</span></li>
+            <li><span class="hl-purple">e) p<sub>B</sub>(A)</span> = Card(A∩B)/Card(B) = 3/13 ≈ <span class="hl-gold">0,23</span></li>
+        </ul>
+    </div>
+
+    <!-- Exercice 4 -->
+    <div class="card green">
+        <h3>📝 Exercice 4 — Classe de Première <span class="tag green">Niveau 3</span></h3>
+        <p style="margin-bottom:12px;">Dans une classe de Première : 19 filles, 16 garçons. Parmi les filles, 5 sont externes. Parmi les garçons, 2 sont externes. On choisit un élève au hasard.</p>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="color: var(--accent-purple);">Filles</th>
+                    <th style="color: var(--accent-blue);">Garçons</th>
+                    <th class="total-th">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight:700; color: var(--accent-orange);">Externes</td>
+                    <td class="highlight-cell">5</td>
+                    <td>2</td>
+                    <td class="total-cell">7</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700;">Non externes</td>
+                    <td>14</td>
+                    <td>14</td>
+                    <td class="total-cell">28</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700;">Total</td>
+                    <td class="total-cell">19</td>
+                    <td class="total-cell">16</td>
+                    <td class="total-cell">35</td>
+                </tr>
+            </tbody>
+        </table>
+        <ul style="margin-top:12px;">
+            <li><span class="hl-purple">b) p(F ∩ E)</span> = 5/35 = <span class="hl-gold">1/7</span> ≈ 0,14 — probabilité d'être une fille externe</li>
+            <li><span class="hl-blue">c) p<sub>E</sub>(G)</span> = Card(G∩E)/Card(E) = 2/7 ≈ <span class="hl-gold">0,29</span> — garçon sachant qu'il est externe</li>
+            <li><span class="hl-green">d) Card(F ∩ Ē) = Card(G ∩ Ē) = 14</span> → la répartition des non-externes est équitable entre filles et garçons ✓</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ===================== SECTION 6 : QUIZ ===================== -->
+<div class="section hidden" id="quiz">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(79,195,247,0.12);">⚡</div>
+        <div>
+            <h2 style="color: var(--accent-blue);">Quiz Rapide</h2>
+            <div class="subtitle">Clique sur chaque réponse pour la révéler · Teste tes connaissances !</div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">1</div>
+            <span>Quelle est la formule de la probabilité conditionnelle p<sub>A</sub>(B) ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">p<sub>A</sub>(B) = Card(A ∩ B) / Card(A)</strong><br>
+                <span style="color: var(--text-muted);">Ou de manière générale : p<sub>A</sub>(B) = p(A ∩ B) / p(A). Le dénominateur est toujours l'événement « sachant ».</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">2</div>
+            <span>Qu'est-ce qu'un événement contraire B̄ ? Quelle est sa probabilité ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">B̄ est l'événement qui se réalise quand B ne se réalise pas.</strong><br>
+                <span style="color: var(--text-muted);">p(B) + p(B̄) = 1, donc p(B̄) = 1 − p(B). Très utile pour les calculs !</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">3</div>
+            <span>Avec un dé, A = pair = {2;4;6} et B = ≥ 4 = {4;5;6}. Calculer p<sub>A</sub>(B).</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">A ∩ B = {4;6} → Card(A ∩ B) = 2, Card(A) = 3 → p<sub>A</sub>(B) = 2/3</strong><br>
+                <span style="color: var(--text-muted);">Parmi les 3 nombres pairs {2,4,6}, seulement 4 et 6 sont ≥ 4. On restreint à A.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">4</div>
+            <span>Qu'est-ce que la sensibilité d'un test diagnostique ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">Sensibilité = p<sub>M</sub>(T) = probabilité que le test soit positif sachant que le patient est malade.</strong><br>
+                <span style="color: var(--text-muted);">Une sensibilité proche de 1 signifie peu de faux négatifs. Le test détecte bien les malades.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">5</div>
+            <span>Quelle est la formule de la réunion p(A ∪ B) ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">p(A ∪ B) = p(A) + p(B) − p(A ∩ B)</strong><br>
+                <span style="color: var(--text-muted);">On soustrait p(A ∩ B) pour ne pas le compter deux fois. Si A et B sont incompatibles : p(A ∪ B) = p(A) + p(B).</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">6</div>
+            <span>Card(A) = 10, Card(B) = 15, Card(A ∩ B) = 4. Calculer p<sub>B</sub>(A).</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">p<sub>B</sub>(A) = Card(A ∩ B) / Card(B) = 4/15 ≈ 0,27</strong><br>
+                <span style="color: var(--text-muted);">Attention : on divise par Card(B) car on calcule « sachant B ». Le numérateur est toujours Card(A ∩ B).</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">7</div>
+            <span>Quelle est la différence entre un faux positif et un faux négatif dans un test médical ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">Faux positif : test T+ alors que patient non malade (M̄). Faux négatif : test T− alors que patient malade (M).</strong><br>
+                <span style="color: var(--text-muted);">Le faux négatif est généralement plus grave car un malade n'est pas traité. La sensibilité mesure les faux négatifs, la spécificité mesure les faux positifs.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">8</div>
+            <span>Ω = {1;2;3;4;5;6}. A = {1;3;5} (impair). Calculer p(A), puis p(Ā).</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Clique pour révéler la réponse</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold);">p(A) = 3/6 = 1/2. Puis p(Ā) = 1 − p(A) = 1 − 1/2 = 1/2.</strong><br>
+                <span style="color: var(--text-muted);">Ā = {2;4;6} (pair). Card(Ā) = 3. On peut aussi calculer directement : p(Ā) = 3/6 = 1/2.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="note-box" style="margin-top:20px;">
+        <div class="note-icon">🎯</div>
+        <p><strong>Rappel méthode :</strong> Pour toute probabilité conditionnelle p<sub>A</sub>(B), identifier : <br>
+        1️⃣ l'événement « sachant » (→ dénominateur) <br>
+        2️⃣ l'événement « dont on cherche la proba » (→ numérateur = intersection) <br>
+        3️⃣ Appliquer la formule : Card(A ∩ B) / Card(A)</p>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>📚 Fiche de révision · Chapitre 12 · Probabilités Conditionnelles · 1ère STI2D/STL</p>
+    <p style="margin-top:6px;">Conçue pour t'aider à réussir ton cours de Mathématiques ✨</p>
+</div>
+
+<script>
+    // PROGRESS BAR
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    // NAV TABS
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+        const section = document.getElementById(id);
+        section.classList.remove('hidden');
+        // Re-trigger animation
+        section.style.animation = 'none';
+        section.offsetHeight;
+        section.style.animation = '';
+
+        event.target.classList.add('active');
+        window.scrollTo({ top: 160, behavior: 'smooth' });
+    }
+
+    // QUIZ REVEAL
+    function revealAnswer(el) {
+        el.classList.toggle('revealed');
+    }
+</script>
+</body>
+</html>
