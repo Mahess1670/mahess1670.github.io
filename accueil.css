@@ -399,13 +399,14 @@ a {
     top: 0;
     left: 0;
     right: 0;
-    height: 120px;
-    opacity: 0.6;
-    transition: opacity 0.3s;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
 }
 
 .fiche-card:hover .fiche-card-glow {
-    opacity: 1;
+    opacity: 0.4;
 }
 
 .fiche-card-content {
