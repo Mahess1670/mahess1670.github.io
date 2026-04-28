@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Fiches de Révision</title>
+    <link rel="stylesheet" href="accueil.css">
+</head>
+<body>
+
+    <!-- Particules animées -->
+    <div class="particles" id="particles"></div>
+
+    <!-- ======================== HEADER ======================== -->
+    <header class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">RevisionHub</span>
+            </div>
+            <h1>Mes Fiches de Révision</h1>
+            <p class="hero-subtitle">Toutes tes fiches organisées par matière, prêtes à réviser.</p>
+
+            <!-- Barre de recherche -->
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Rechercher une fiche..." oninput="filterCards()">
+                <span class="search-clear" id="searchClear" onclick="clearSearch()">✕</span>
+            </div>
+
+            <!-- Stats rapides -->
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number" id="totalFiches">1</span>
+                    <span class="hero-stat-label">Fiche</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" id="totalMatieres">1</span>
+                    <span class="hero-stat-label">Matière</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" id="totalThemes">1</span>
+                    <span class="hero-stat-label">Thème</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ======================== FILTRES PAR MATIÈRE ======================== -->
+    <nav class="filter-bar">
+        <button class="filter-btn active" onclick="filterBySubject('all', this)">
+            <span class="filter-icon">📋</span> Tout
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('histoire', this)">
+            <span class="filter-icon">🏛️</span> Histoire
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('geographie', this)">
+            <span class="filter-icon">🌍</span> Géographie
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('francais', this)">
+            <span class="filter-icon">📖</span> Français
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('maths', this)">
+            <span class="filter-icon">📐</span> Maths
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('emc', this)">
+            <span class="filter-icon">⚖️</span> EMC
+        </button>
+        <button class="filter-btn" onclick="filterBySubject('i2d', this)">
+            <span class="filter-icon">🔧</span> I2D
+        </button>
+    </nav>
+
+    <!-- ======================== GRILLE DES FICHES ======================== -->
+    <main class="fiches-container">
+
+        <!-- Message quand aucun résultat -->
+        <div class="no-results" id="noResults">
+            <div class="no-results-icon">🔍</div>
+            <h3>Aucune fiche trouvée</h3>
+            <p>Essaie avec d'autres mots-clés ou change de filtre.</p>
+        </div>
+
+        <!-- ====== HISTOIRE ====== -->
+        <section class="matiere-section" data-subject="histoire" id="section-histoire">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #ef5350, #ff7043);">🏛️</div>
+                <div>
+                    <h2>Histoire</h2>
+                    <p class="matiere-count"><span class="count-number">1</span> fiche disponible</p>
+                </div>
+            </div>
+
+            <div class="fiches-grid">
+
+                <!-- Fiche 1 : IIIe République -->
+                <a href="fiches/histoire-theme3.html" class="fiche-card" data-subject="histoire" data-tags="république coloniale dreyfus laïcité 1870 1905 empire colonial troisième">
+    <div class="fiche-card-glow" style="background: radial-gradient(ellipse at top left, rgba(239,83,80,0.08), transparent 70%);"></div>
+    <div class="fiche-card-content">
+                        <div class="fiche-badge" style="background: linear-gradient(135deg, #ef5350, #ff7043);">Thème 3</div>
+                        <h3 class="fiche-title">La IIIe République</h3>
+                        <p class="fiche-desc">Un régime, ses valeurs et son empire colonial (1870–1914)</p>
+                        <div class="fiche-tags">
+                            <span class="tag">République</span>
+                            <span class="tag">Dreyfus</span>
+                            <span class="tag">Laïcité</span>
+                            <span class="tag">Colonies</span>
+                        </div>
+                        <div class="fiche-footer">
+                            <div class="fiche-progress">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="progress-label">Pas encore révisé</span>
+                            </div>
+                            <div class="fiche-arrow">→</div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- ============================================================
+                     MODÈLE POUR AJOUTER UNE NOUVELLE FICHE HISTOIRE :
+                     
+                <a href="fiches/NOM-DU-FICHIER.html" class="fiche-card" data-subject="histoire" data-tags="mots clés">
+                    <div class="fiche-card-glow" style="background: linear-gradient(135deg, rgba(239,83,80,0.15), rgba(255,112,67,0.08));"></div>
+                    <div class="fiche-card-content">
+                        <div class="fiche-badge" style="background: linear-gradient(135deg, #ef5350, #ff7043);">Thème X</div>
+                        <h3 class="fiche-title">Titre</h3>
+                        <p class="fiche-desc">Description</p>
+                        <div class="fiche-tags">
+                            <span class="tag">Tag</span>
+                        </div>
+                        <div class="fiche-footer">
+                            <div class="fiche-progress">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="progress-label">Pas encore révisé</span>
+                            </div>
+                            <div class="fiche-arrow">→</div>
+                        </div>
+                    </div>
+                </a>
+                ============================================================ -->
+
+            </div>
+        </section>
+
+        <!-- ====== GÉOGRAPHIE ====== -->
+        <section class="matiere-section" data-subject="geographie" id="section-geographie">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #66bb6a, #26a69a);">🌍</div>
+                <div>
+                    <h2>Géographie</h2>
+                    <p class="matiere-count"><span class="count-number">0</span> fiche disponible</p>
+                </div>
+            </div>
+            <div class="fiches-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">🌍</div>
+                    <p>Aucune fiche pour le moment</p>
+                    <span class="empty-hint">Les fiches apparaîtront ici</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== FRANÇAIS ====== -->
+        <section class="matiere-section" data-subject="francais" id="section-francais">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #ab47bc, #7e57c2);">📖</div>
+                <div>
+                    <h2>Français</h2>
+                    <p class="matiere-count"><span class="count-number">0</span> fiche disponible</p>
+                </div>
+            </div>
+            <div class="fiches-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">📖</div>
+                    <p>Aucune fiche pour le moment</p>
+                    <span class="empty-hint">Les fiches apparaîtront ici</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== MATHS ====== -->
+        <section class="matiere-section" data-subject="maths" id="section-maths">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #ffa726, #ff7043);">📐</div>
+                <div>
+                    <h2>Mathématiques</h2>
+                    <p class="matiere-count"><span class="count-number">0</span> fiche disponible</p>
+                </div>
+            </div>
+            <div class="fiches-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">📐</div>
+                    <p>Aucune fiche pour le moment</p>
+                    <span class="empty-hint">Les fiches apparaîtront ici</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== EMC ====== -->
+        <section class="matiere-section" data-subject="emc" id="section-emc">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #4fc3f7, #4dd0e1);">⚖️</div>
+                <div>
+                    <h2>EMC</h2>
+                    <p class="matiere-count"><span class="count-number">0</span> fiche disponible</p>
+                </div>
+            </div>
+            <div class="fiches-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">⚖️</div>
+                    <p>Aucune fiche pour le moment</p>
+                    <span class="empty-hint">Les fiches apparaîtront ici</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== I2D ====== -->
+        <section class="matiere-section" data-subject="i2d" id="section-i2d">
+            <div class="matiere-header">
+                <div class="matiere-icon" style="background: linear-gradient(135deg, #42a5f5, #5c6bc0);">🔧</div>
+                <div>
+                    <h2>I2D</h2>
+                    <p class="matiere-count"><span class="count-number">0</span> fiche disponible</p>
+                </div>
+            </div>
+            <div class="fiches-grid">
+                <div class="empty-state">
+                    <div class="empty-icon">🔧</div>
+                    <p>Aucune fiche pour le moment</p>
+                    <span class="empty-hint">Les fiches apparaîtront ici</span>
+                </div>
+
+                <!-- ============================================================
+                     MODÈLE POUR AJOUTER UNE FICHE I2D :
+                     
+                <a href="fiches/NOM-DU-FICHIER.html" class="fiche-card" data-subject="i2d" data-tags="mots clés">
+                    <div class="fiche-card-glow" style="background: linear-gradient(135deg, rgba(66,165,245,0.15), rgba(92,107,192,0.08));"></div>
+                    <div class="fiche-card-content">
+                        <div class="fiche-badge" style="background: linear-gradient(135deg, #42a5f5, #5c6bc0);">Chapitre X</div>
+                        <h3 class="fiche-title">Titre</h3>
+                        <p class="fiche-desc">Description</p>
+                        <div class="fiche-tags">
+                            <span class="tag">Tag</span>
+                        </div>
+                        <div class="fiche-footer">
+                            <div class="fiche-progress">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="progress-label">Pas encore révisé</span>
+                            </div>
+                            <div class="fiche-arrow">→</div>
+                        </div>
+                    </div>
+                </a>
+                ============================================================ -->
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">📚 RevisionHub</div>
+            <p>Bon courage pour les révisions ! 💪</p>
+            <div class="footer-tip">
+                <strong>💡 Astuce :</strong> Pour ajouter une fiche, place ton fichier HTML dans le dossier <code>fiches/</code> et ajoute une carte dans cette page.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================== JAVASCRIPT ======================== -->
+    <script>
+        // ===== PARTICULES D'ARRIÈRE-PLAN =====
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // ===== FILTRER PAR MATIÈRE =====
+        function filterBySubject(subject, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const sections = document.querySelectorAll('.matiere-section');
+            sections.forEach(section => {
+                if (subject === 'all' || section.dataset.subject === subject) {
+                    section.style.display = '';
+                    section.style.animation = 'fadeUp 0.4s ease-out';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            checkNoResults();
+        }
+
+        // ===== RECHERCHE =====
+        function filterCards() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const clearBtn = document.getElementById('searchClear');
+            clearBtn.style.display = query ? 'flex' : 'none';
+
+            const cards = document.querySelectorAll('.fiche-card');
+            const sections = document.querySelectorAll('.matiere-section');
+
+            if (!query) {
+                cards.forEach(card => {
+                    card.style.display = '';
+                    card.style.animation = 'fadeUp 0.3s ease-out';
+                });
+                sections.forEach(s => s.style.display = '');
+                checkNoResults();
+                return;
+            }
+
+            cards.forEach(card => {
+                const title = card.querySelector('.fiche-title').textContent.toLowerCase();
+                const desc = card.querySelector('.fiche-desc').textContent.toLowerCase();
+                const tags = card.dataset.tags?.toLowerCase() || '';
+                const match = title.includes(query) || desc.includes(query) || tags.includes(query);
+                card.style.display = match ? '' : 'none';
+                if (match) card.style.animation = 'fadeUp 0.3s ease-out';
+            });
+
+            sections.forEach(section => {
+                const allCards = section.querySelectorAll('.fiche-card');
+                let count = 0;
+                allCards.forEach(c => { if (c.style.display !== 'none') count++; });
+                section.style.display = count > 0 ? '' : 'none';
+            });
+
+            checkNoResults();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').style.display = 'none';
+            filterCards();
+        }
+
+        function checkNoResults() {
+            const sections = document.querySelectorAll('.matiere-section');
+            let anyVisible = false;
+            sections.forEach(s => {
+                if (s.style.display !== 'none') {
+                    const cards = s.querySelectorAll('.fiche-card');
+                    cards.forEach(c => {
+                        if (c.style.display !== 'none') anyVisible = true;
+                    });
+                    if (cards.length === 0 && s.style.display !== 'none') anyVisible = true;
+                }
+            });
+            document.getElementById('noResults').style.display = anyVisible ? 'none' : 'flex';
+        }
+
+        // ===== COMPTEURS =====
+        function updateCounts() {
+            const allCards = document.querySelectorAll('.fiche-card');
+            document.getElementById('totalFiches').textContent = allCards.length;
+
+            const subjects = new Set();
+            allCards.forEach(c => subjects.add(c.dataset.subject));
+            document.getElementById('totalMatieres').textContent = subjects.size;
+            document.getElementById('totalThemes').textContent = allCards.length;
+        }
+        updateCounts();
+    </script>
+
+</body>
+</html>
