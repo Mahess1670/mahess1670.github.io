@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Plan 30 Jours — Bac de Français</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0f0f1a;--card-bg:#1a1a2e;--card-hover:#22223a;--accent-blue:#4fc3f7;--accent-red:#ef5350;--accent-gold:#ffd54f;--accent-green:#66bb6a;--accent-purple:#ab47bc;--accent-orange:#ffa726;--text:#e8e8f0;--text-muted:#9e9eb8;--border:rgba(255,255,255,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 50%,rgba(79,195,247,0.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(171,71,188,0.04) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(239,83,80,0.03) 0%,transparent 50%);animation:bgFloat 20s ease-in-out infinite;z-index:-1;pointer-events:none}
+@keyframes bgFloat{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(2%,-2%) rotate(1deg)}66%{transform:translate(-1%,1%) rotate(-1deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+#scrollBar-wrap{position:fixed;top:0;left:0;width:100%;height:4px;z-index:1000;background:rgba(255,255,255,0.05)}
+#scrollBar{height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple),var(--accent-gold));width:0%;transition:width .1s}
+
+.hero{text-align:center;padding:60px 20px 40px}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));color:#fff;font-size:.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 20px;border-radius:30px;margin-bottom:20px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--accent-blue) 50%,var(--accent-gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.hero p{color:var(--text-muted);font-size:1.05rem;max-width:600px;margin:0 auto}
+
+.stat-bar{display:flex;gap:12px;flex-wrap:wrap;margin:28px auto 0;max-width:560px;justify-content:center}
+.stat-item{flex:1;min-width:110px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px 10px;text-align:center;transition:all .3s}
+.stat-item:hover{background:rgba(255,213,79,0.06);border-color:rgba(255,213,79,0.2)}
+.stat-item .number{font-size:1.7rem;font-weight:900;background:linear-gradient(135deg,var(--accent-gold),var(--accent-orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-item .label{font-size:.72rem;color:var(--text-muted);margin-top:4px}
+
+.guide-toggle{background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);border-radius:10px;padding:8px 20px;cursor:pointer;font-size:.82rem;font-weight:600;transition:all .3s;margin-top:20px;font-family:inherit}
+.guide-toggle:hover{border-color:var(--accent-blue);color:var(--accent-blue);background:rgba(79,195,247,0.06)}
+
+.technique-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;max-width:900px;margin:0 auto;padding:0 20px 30px;animation:fadeUp .4s ease-out}
+.technique-grid.open{display:grid}
+.technique-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:18px 20px 18px 24px;transition:all .3s;position:relative;overflow:hidden}
+.technique-card:hover{background:var(--card-hover);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.3)}
+.tech-bar{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.tech-name{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.tech-short{font-size:.8rem;color:var(--text-muted);margin-bottom:8px}
+.tech-desc{font-size:.78rem;color:var(--text-muted);opacity:.7;line-height:1.6}
+
+.timeline-bar{display:flex;justify-content:center;align-items:center;gap:0;margin:30px auto;max-width:700px;padding:0 20px}
+.timeline-node{display:flex;flex-direction:column;align-items:center;z-index:2;cursor:pointer}
+.timeline-node .dot{width:18px;height:18px;border-radius:50%;border:3px solid;background:var(--bg);transition:all .3s}
+.timeline-node:hover .dot{transform:scale(1.3)}
+.timeline-node .tlabel{font-size:.7rem;font-weight:700;margin-top:6px;white-space:nowrap}
+.timeline-line{flex:1;height:3px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-gold));opacity:.4;min-width:30px}
+
+.structure-reminder{max-width:900px;margin:0 auto 30px;padding:0 20px}
+.structure-box{background:linear-gradient(135deg,rgba(79,195,247,0.06),rgba(255,213,79,0.06));border:1px solid rgba(79,195,247,0.15);border-radius:14px;padding:18px 22px;display:flex;gap:14px;align-items:center}
+.struct-icon{font-size:1.6rem;flex-shrink:0}
+.struct-text{font-size:.88rem;color:var(--text-muted);line-height:1.8}
+.struct-text strong{color:var(--text)}
+
+.week-container{max-width:900px;margin:0 auto 16px;padding:0 20px}
+.week-header{width:100%;background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:20px 24px 20px 28px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;color:var(--text);font-family:inherit;text-align:left;font-size:inherit}
+.week-header:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.1)}
+.week-header.open{border-radius:16px 16px 0 0}
+.wbar{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.week-num{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.week-subtitle{font-family:'Playfair Display',serif;font-weight:800;font-size:1.15rem;margin-top:2px}
+.week-arrow{font-size:1rem;transition:transform .3s;display:inline-block}
+.week-arrow.open{transform:rotate(180deg)}
+
+.week-body{background:rgba(26,26,46,0.5);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;overflow:hidden;animation:fadeUp .4s ease-out}
+
+.day-row{border-bottom:1px solid var(--border)}
+.day-row:last-child{border-bottom:none}
+.day-header{width:100%;padding:14px 22px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;background:transparent;border:none;color:var(--text);font-family:inherit;text-align:left;font-size:inherit}
+.day-header:hover{background:rgba(255,255,255,0.03)}
+.day-badge{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:#fff;flex-shrink:0;transition:all .3s}
+.day-title{font-weight:700;font-size:.95rem;transition:all .3s}
+.day-techniques{font-size:.75rem;margin-top:2px}
+.day-toggle{margin-left:auto;font-size:1.1rem;transition:transform .3s;color:var(--text-muted);flex-shrink:0}
+
+.day-content{padding:8px 22px 22px 74px;animation:fadeUp .4s ease-out}
+
+.bloc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.bloc-tech-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border-radius:8px;font-size:.72rem;font-weight:700;color:#fff;white-space:nowrap}
+.bloc-label{font-size:.8rem;font-weight:700;color:var(--text)}
+.bloc-duree{margin-left:auto;font-size:.72rem;color:var(--text-muted);white-space:nowrap}
+
+.seance-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.seance-dot{width:6px;height:6px;border-radius:50%;margin-top:9px;flex-shrink:0}
+.seance-text{font-size:.85rem;line-height:1.7;color:var(--text-muted)}
+.seance-pause{color:rgba(158,158,184,0.5);font-style:italic}
+
+.pause-box{margin:14px 0;padding:12px 16px;background:rgba(255,213,79,0.06);border:1px dashed rgba(255,213,79,0.25);border-radius:10px;display:flex;gap:10px;align-items:center}
+.pause-box .pause-icon{font-size:1.2rem;flex-shrink:0}
+.pause-box strong{display:block;font-size:.72rem;color:var(--accent-gold);letter-spacing:1px;text-transform:uppercase}
+.pause-box .pause-desc{font-size:.78rem;color:var(--text-muted)}
+
+.objectif-box{margin-top:14px;padding:12px 16px 12px 19px;border-radius:0 10px 10px 0;position:relative}
+.obj-bar{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px}
+.objectif-label{font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.objectif-text{font-size:.85rem;color:var(--text-muted);line-height:1.7}
+
+.complete-btn{margin-top:14px;width:100%;padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text-muted);cursor:pointer;font-size:.82rem;font-weight:600;transition:all .3s;font-family:inherit}
+.complete-btn:hover{border-color:var(--accent-green);color:var(--accent-green);background:rgba(102,187,106,0.06)}
+.complete-btn.done{border-color:var(--accent-green);color:var(--accent-green);background:rgba(102,187,106,0.1)}
+
+.progress-section{max-width:900px;margin:30px auto 0;padding:0 20px}
+.progress-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.progress-title{font-weight:700;font-size:.9rem}
+.progress-count{font-size:.8rem;color:var(--text-muted)}
+.progress-track{background:rgba(255,255,255,0.05);border-radius:8px;height:10px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-purple),var(--accent-gold));border-radius:8px;transition:width .5s ease;width:0%}
+.progress-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:.72rem;color:var(--text-muted)}
+
+.resources-box{max-width:900px;margin:20px auto 0;padding:0 20px}
+.resources-inner{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
+.resources-inner strong{color:var(--text)}
+.resources-inner p{font-size:.85rem;color:var(--text-muted);line-height:1.9;margin:0}
+.hl-gold{color:var(--accent-gold)}
+
+.footer{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:40px;max-width:900px;margin-left:auto;margin-right:auto}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+
+@media(max-width:600px){
+.hero{padding:40px 16px 30px}
+.stat-bar{gap:8px}
+.stat-item{min-width:70px;padding:12px 6px}
+.stat-item .number{font-size:1.2rem}
+.stat-item .label{font-size:.6rem}
+.technique-grid.open{grid-template-columns:1fr}
+.day-content{padding-left:22px}
+.week-subtitle{font-size:1rem}
+.timeline-node .tlabel{font-size:.55rem}
+.bloc-header{gap:6px}
+.structure-box{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div id="scrollBar-wrap"><div id="scrollBar"></div></div>
+
+<div class="hero">
+  <div class="hero-badge">Baccalauréat de Français · Commentaire composé</div>
+  <h1>Plan 30 jours</h1>
+  <p>Méthodes cognitives · 2 blocs de 55 min · 7 techniques de mémorisation scientifiquement prouvées</p>
+  <div class="stat-bar">
+    <div class="stat-item"><div class="number">2×55</div><div class="label">min / jour</div></div>
+    <div class="stat-item"><div class="number">7</div><div class="label">techniques</div></div>
+    <div class="stat-item"><div class="number">7</div><div class="label">commentaires</div></div>
+    <div class="stat-item"><div class="number" id="statPct">0%</div><div class="label">complété</div></div>
+  </div>
+  <button class="guide-toggle" id="guideBtn" onclick="toggleGuide()">📖 Voir le guide des techniques</button>
+</div>
+
+<div class="technique-grid" id="guideGrid"></div>
+<div class="timeline-bar" id="timeline"></div>
+
+<div class="structure-reminder">
+  <div class="structure-box">
+    <span class="struct-icon">⏱️</span>
+    <div class="struct-text">
+      <strong>Structure de chaque journée :</strong> Bloc 1 (55 min) → <strong style="color:var(--accent-gold)">Pause 30‑60 min</strong> (sortir, manger, pas d'écran) → Bloc 2 (55 min)<br>
+      Chaque bloc = 2 Pomodoros de 25 min + 5 min de pause active.
+    </div>
+  </div>
+</div>
+
+<div id="weeksRoot"></div>
+
+<div class="progress-section">
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="progress-title">📊 Progression globale</span>
+      <span class="progress-count" id="pCount">0/30 jours</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+    <div class="progress-labels"><span>S1 · Méthode</span><span>S2 · Outils</span><span>S3 · Intensif</span><span>S4 · Sprint</span></div>
+  </div>
+</div>
+
+<div class="resources-box">
+  <div class="resources-inner">
+    <p><strong>📚 Ressources :</strong> bacdefrancais.net · annales Hatier · YouTube Kartable / Annabac</p>
+    <p style="margin-top:8px"><strong>🧠 Règle d'or :</strong> la pause entre les blocs n'est pas du temps perdu.<br><span class="hl-gold">C'est là que la mémoire se consolide.</span></p>
+  </div>
+</div>
+
+<div class="footer">
+  Plan de révision basé sur les méthodes cognitives : rappel actif, espacement, interleaving, technique Feynman.<br>
+  Conçu pour le Baccalauréat de Français — Commentaire composé.
+</div>
+
+<script>
+/* ═══════════════ DATA ═══════════════ */
+var T={
+pomodoro:{n:"Pomodoro",e:"🍅",c:"#ef5350",s:"25 min travail · 5 min pause",d:"Le cerveau maintient une concentration maximale environ 25 min. Après, les performances chutent. La pause active la consolidation mémorielle."},
+recall:{n:"Rappel actif",e:"🧠",c:"#ab47bc",s:"Ferme le cours → restitue de mémoire",d:"Se forcer à retrouver l'info sans regarder est 3× plus efficace que de relire. Chaque rappel renforce les connexions neuronales."},
+feynman:{n:"Feynman",e:"🗣️",c:"#4fc3f7",s:"Explique à voix haute comme à un enfant",d:"Si tu ne peux pas l'expliquer simplement, tu ne l'as pas compris. Ça révèle tes lacunes exactes."},
+interleaving:{n:"Interleaving",e:"🔀",c:"#66bb6a",s:"Alterne les types de tâches",d:"Varier les exercices force le cerveau à s'adapter. Plus difficile sur le moment, bien plus efficace à long terme."},
+elaboration:{n:"Élaboration",e:"🔗",c:"#ffa726",s:"Relie chaque notion à ce que tu sais déjà",d:"Créer des liens entre les idées ancre l'information dans ta mémoire à long terme."},
+spacing:{n:"Espacement",e:"📅",c:"#26a69a",s:"Révise une notion plusieurs fois, espacées",d:"Revoir une notion à J+1, J+3, J+7 est bien plus efficace que la revoir 3 fois d'affilée. Le cerveau consolide pendant le sommeil."},
+dumpBrain:{n:"Brain dump",e:"📝",c:"#78909c",s:"Vide tout ce que tu sais sur une feuille",d:"Avant de relire un cours, écris tout ce dont tu te souviens. Ça mesure ta rétention réelle et identifie ce qu'il faut retravailler."}
+};
+
+var W=[
+{num:1,sub:"La méthode du commentaire",col:"rgba(79,195,247,0.06)",ac:"#4fc3f7",days:[
+{day:1,t:"Découverte du commentaire",b1:{dur:"55 min",lab:"BLOC 1 — Comprendre",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Regarder une vidéo 'méthode commentaire bac' sur YouTube (Kartable, Annabac...)"},{d:"5 min",t:"⏸️ Pause — marche, eau, pas d'écran"},{d:"25 min",t:"🍅 Lire 1 commentaire corrigé complet sur bacdefrancais.net en surlignant la structure"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Mémoriser",tech:"recall",s:[{d:"25 min",t:"🍅 Rappel actif : ferme tout → écris de mémoire la structure d'un commentaire (intro, axes, conclu)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Compare avec tes notes → corrige → refais le rappel une 2ème fois"}]},obj:"À la fin du jour 1, tu dois pouvoir dicter la structure d'un commentaire sans regarder."},
+{day:2,t:"L'introduction",b1:{dur:"55 min",lab:"BLOC 1 — Apprendre",tech:"feynman",s:[{d:"25 min",t:"🍅 Lire 3 exemples d'introductions corrigées · noter la structure (amorce → texte → problématique → plan)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🗣️ Feynman : explique à voix haute ce qu'est une bonne intro, comme si tu l'expliquais à un ami"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Pratiquer",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Rédiger 1 introduction complète sur un texte (annale)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger une 2ème introduction · puis comparer les 2 avec un corrigé"}]},obj:"2 introductions rédigées + comprendre pourquoi la problématique est le point le plus difficile."},
+{day:3,t:"Le plan et les axes",b1:{dur:"55 min",lab:"BLOC 1 — Méthode",tech:"feynman",s:[{d:"25 min",t:"🍅 Lire comment construire un plan en 2‑3 axes · un axe = réponse partielle à la problématique"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🗣️ Feynman : explique la différence entre un plan 'description' et un plan 'analyse'"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Interleaving",tech:"interleaving",s:[{d:"25 min",t:"🔀 Sur 3 textes différents (poésie, roman, théâtre) : trouver un plan sans rédiger"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔀 Vérifier avec les corrigés · pour chaque erreur, écrire POURQUOI le bon plan est meilleur"}]},obj:"Être capable de trouver un plan en moins de 15 min sur un texte inconnu."},
+{day:4,t:"Figures de style (1/2)",b1:{dur:"55 min",lab:"BLOC 1 — Mémorisation",tech:"elaboration",s:[{d:"25 min",t:"🍅 Apprendre 5 figures : métaphore, comparaison, personnification, anaphore, hyperbole · exemple perso pour chacune"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔗 Élaboration : écrire une phrase d'analyse pour chaque figure"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rappel actif",tech:"recall",s:[{d:"25 min",t:"🧠 Rappel actif : feuille blanche → écrire de mémoire les 5 figures + 1 exemple + 1 formule d'analyse"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Exercice d'identification : trouver et nommer les figures dans 5 extraits courts"}]},obj:"5 figures mémorisées avec exemple + formule d'analyse. Pas juste le nom."},
+{day:5,t:"Figures de style (2/2)",b1:{dur:"55 min",lab:"BLOC 1 — Nouvelles figures",tech:"elaboration",s:[{d:"25 min",t:"🍅 Apprendre 5 figures : ironie, chiasme, oxymore, antithèse, litote · exemple perso pour chacune"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔗 Écrire une phrase d'analyse complète pour chaque nouvelle figure"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Consolidation espacée",tech:"spacing",s:[{d:"15 min",t:"📅 Rappel espacé des 5 figures du jour 4 (sans regarder)"},{d:"5 min",t:"⏸️ Pause"},{d:"35 min",t:"🔀 Interleaving : sur 3 extraits, identifier TOUTES les figures (J4+J5) + écrire l'effet produit"}]},obj:"10 figures maîtrisées avec formule d'analyse. C'est ton stock pour tout le bac."},
+{day:6,t:"Rédiger une sous-partie",b1:{dur:"55 min",lab:"BLOC 1 — Méthode ICEA",tech:"feynman",s:[{d:"25 min",t:"🍅 Structure d'une sous-partie : Idée → Citation → Explication → Analyse de l'effet (ICEA)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🗣️ Feynman : explique pourquoi une citation sans analyse = 0 point"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédaction",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Rédiger 2 sous-parties complètes (ICEA) sur un texte au choix"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Comparer avec un corrigé · repérer ce qui manque dans ton analyse"}]},obj:"Maîtriser la structure ICEA : Idée → Citation → Explication → Analyse de l'effet."},
+{day:7,t:"Bilan S1 — Brain dump",b1:{dur:"55 min",lab:"BLOC 1 — Évaluation réelle",tech:"dumpBrain",s:[{d:"25 min",t:"📝 Brain dump : feuille blanche → vide tout ce que tu sais sur le commentaire"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Compare avec tes notes · entoure en rouge ce qui manquait → liste de lacunes S1"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Application",tech:"interleaving",s:[{d:"35 min",t:"🔀 Rédiger intro + plan + 1 sous-partie sur un nouveau texte"},{d:"5 min",t:"⏸️ Pause"},{d:"15 min",t:"📅 Rappel espacé : brain dump des 10 figures (J4+J5) sans regarder"}]},obj:"Identifier précisément tes lacunes S1. Elles guident la S2."}
+]},
+{num:2,sub:"Les outils littéraires",col:"rgba(171,71,188,0.06)",ac:"#ab47bc",days:[
+{day:8,t:"Les registres littéraires",b1:{dur:"55 min",lab:"BLOC 1 — Apprendre",tech:"elaboration",s:[{d:"25 min",t:"🍅 6 registres clés : lyrique, épique, tragique, comique, ironique, pathétique · pour chacun : un film / une série qui l'illustre"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔗 Écrire une formule type pour chaque registre ('Le registre X crée un effet Y qui traduit Z')"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rappel actif + pratique",tech:"recall",s:[{d:"15 min",t:"🧠 Rappel actif : liste les 6 registres + formule · sans regarder"},{d:"5 min",t:"⏸️ Pause"},{d:"35 min",t:"🔀 Identifier le registre dans 5 extraits · justifier en une phrase"}]},obj:"Pouvoir identifier un registre et expliquer son effet en 1 phrase."},
+{day:9,t:"Les mouvements littéraires",b1:{dur:"55 min",lab:"BLOC 1 — Classicisme, Romantisme, Réalisme",tech:"elaboration",s:[{d:"25 min",t:"🍅 Dates, idées clés, 2 auteurs par mouvement · mémoriser via des associations"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🗣️ Feynman : expliquer chaque mouvement en 3 phrases comme si ton pote n'en avait jamais entendu parler"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Naturalisme, Surréalisme, Humanisme",tech:"interleaving",s:[{d:"25 min",t:"🍅 Mêmes méthode et associations pour les 3 autres mouvements"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔀 Exercice : associer 5 extraits à leur mouvement · justifier en 1 phrase"}]},obj:"Savoir situer un texte dans son mouvement et le mentionner dans l'intro."},
+{day:10,t:"La problématique",b1:{dur:"55 min",lab:"BLOC 1 — Comprendre",tech:"feynman",s:[{d:"25 min",t:"🍅 Lire 5 exemples de bonnes problématiques vs 5 mauvaises · comprendre la différence"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🗣️ Feynman : pourquoi 'En quoi ce texte est-il intéressant ?' est une mauvaise problématique"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Pratiquer",tech:"interleaving",s:[{d:"30 min",t:"🔀 Formuler une problématique sur 4 textes de genres différents"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"📅 Rappel espacé : brain dump des registres (J8) sans regarder"}]},obj:"Formuler une vraie problématique littéraire en moins de 5 min."},
+{day:11,t:"Révision espacée S1",b1:{dur:"55 min",lab:"BLOC 1 — Brain dump S1",tech:"dumpBrain",s:[{d:"25 min",t:"📝 Brain dump complet S1 : figures × 10, structure commentaire, ICEA, registres"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Combler uniquement les lacunes identifiées · pas tout relire"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Application croisée",tech:"interleaving",s:[{d:"25 min",t:"🔀 Sur 1 texte : trouver plan + problématique + identifier figures + registre"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger l'introduction complète de ce texte"}]},obj:"J11 = test de consolidation. Si tu bloques, note précisément où."},
+{day:12,t:"La conclusion",b1:{dur:"55 min",lab:"BLOC 1 — Méthode",tech:"feynman",s:[{d:"20 min",t:"🍅 Structure conclusion : bilan → réponse problématique → ouverture · lire 3 exemples"},{d:"5 min",t:"⏸️ Pause"},{d:"30 min",t:"🗣️ Feynman : qu'est-ce qu'une 'ouverture' ? Pourquoi elle ne doit pas être hors-sujet ?"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédiger",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Rédiger 3 conclusions sur 3 textes déjà travaillés"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Vérifier avec corrigés · repérer les ouvertures réussies"}]},obj:"Maîtriser la structure en 3 temps de la conclusion."},
+{day:13,t:"Premier commentaire complet",b1:{dur:"55 min",lab:"BLOC 1 — Préparation",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Lire le texte · identifier figures, registre, mouvement · bâtir le plan"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger l'introduction + annoncer les axes"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédaction",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Rédiger les 2 premiers axes (1 sous-partie chacun)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger la conclusion · ne pas corriger ce soir"}]},obj:"Finir le commentaire, même imparfait. Finir > perfectionner."},
+{day:14,t:"Correction du 1er commentaire",b1:{dur:"55 min",lab:"BLOC 1 — Auto-évaluation",tech:"recall",s:[{d:"25 min",t:"🧠 Relire à voix haute ton commentaire · noter les passages faibles"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Comparer avec le corrigé · noter les 5 erreurs principales"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Correction ciblée",tech:"interleaving",s:[{d:"30 min",t:"🔀 Réécrire les 2 passages les plus faibles en t'appuyant sur le corrigé"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"📅 Révision espacée : figures J4+J5 + registres J8 · brain dump rapide"}]},obj:"Liste de tes 5 erreurs récurrentes. C'est ton programme S3."}
+]},
+{num:3,sub:"Entraînement intensif",col:"rgba(255,213,79,0.06)",ac:"#ffd54f",days:[
+{day:15,t:"Commentaire n°2 — poésie",b1:{dur:"55 min",lab:"BLOC 1 — Analyse",tech:"interleaving",s:[{d:"25 min",t:"🔀 Texte poétique : identifier figures + registre + mouvement + bâtir plan"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger intro + problématique"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédaction + correction",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Rédiger les 2 axes + conclusion"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Correction avec corrigé · comparer avec les erreurs J14"}]},obj:"Est-ce que les erreurs J14 sont moins présentes ? Mesurer le progrès."},
+{day:16,t:"Travail sur les transitions",b1:{dur:"55 min",lab:"BLOC 1 — Apprendre",tech:"elaboration",s:[{d:"25 min",t:"🍅 Lire des exemples de transitions réussies · structure : bilan partiel → lien → annonce"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🔗 Écrire 3 templates de transitions réutilisables"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Pratiquer",tech:"recall",s:[{d:"30 min",t:"🧠 Reprendre tes commentaires J13 et J15 · réécrire toutes les transitions"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"📅 Rappel espacé : mouvements littéraires J9 · brain dump rapide"}]},obj:"Avoir 3 formules de transition mémorisées et réutilisables."},
+{day:17,t:"Commentaire n°3 — théâtre",b1:{dur:"55 min",lab:"BLOC 1 — Spécificités du théâtre",tech:"feynman",s:[{d:"20 min",t:"🍅 Spécificités : didascalies, tirades, aparté, double énonciation"},{d:"5 min",t:"⏸️ Pause"},{d:"30 min",t:"🗣️ Feynman : qu'est-ce que la 'double énonciation' au théâtre ? Explique avec un exemple"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Commentaire",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Plan + intro du texte théâtral"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Axes + conclusion · correction rapide"}]},obj:"Ne pas être déstabilisé par un texte de théâtre au bac."},
+{day:18,t:"Révision espacée globale",b1:{dur:"55 min",lab:"BLOC 1 — Brain dump global",tech:"dumpBrain",s:[{d:"25 min",t:"📝 Brain dump : TOUT ce que tu sais (figures, registres, mouvements, ICEA, transitions)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Identifier les lacunes · combler uniquement celles-là"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Application",tech:"interleaving",s:[{d:"30 min",t:"🔀 Sur 2 textes inconnus : plan + problématique + 1 sous-partie ICEA chacun"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"🍅 Correction · noter ce qui bloque encore"}]},obj:"J18 = photo de tes compétences réelles à mi-parcours."},
+{day:19,t:"Commentaire n°4 — roman",b1:{dur:"55 min",lab:"BLOC 1 — Analyse",tech:"interleaving",s:[{d:"25 min",t:"🔀 Texte narratif (incipit ou portrait) : analyse complète en amont"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Intro + plan rédigés"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédaction",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Axes + transitions"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Conclusion + correction rapide avec corrigé"}]},obj:"4 commentaires complets rédigés. Tu as parcouru les 3 grands genres."},
+{day:20,t:"Vocabulaire littéraire",b1:{dur:"55 min",lab:"BLOC 1 — Construire sa fiche",tech:"elaboration",s:[{d:"25 min",t:"🔗 Créer une fiche de 20 expressions à réutiliser dans tout commentaire"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Intégrer ces expressions dans des phrases d'analyse sur des textes déjà travaillés"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Mémorisation",tech:"recall",s:[{d:"25 min",t:"🧠 Rappel actif : dicter la fiche de mémoire · correction"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"📅 Rappel espacé global : figures J4/J5 + registres J8 + mouvements J9"}]},obj:"20 formules mémorisées = tes phrases toutes faites pour le jour J."},
+{day:21,t:"Bilan S3 — Simulation partielle",b1:{dur:"55 min",lab:"BLOC 1 — Conditions réelles (1h)",tech:"pomodoro",s:[{d:"55 min",t:"⏱️ Chrono lancé — intro + plan + 1 axe complet sur texte inconnu. Sans aide, sans pause."}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Correction + auto-évaluation",tech:"recall",s:[{d:"30 min",t:"🍅 Correction détaillée · noter une note estimée sur 20"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"📝 Mettre à jour ta liste d'erreurs · préparer S4 en conséquence"}]},obj:"Si tu t'estimes entre 9 et 13, tu es en bonne trajectoire pour le bac."}
+]},
+{num:4,sub:"Sprint final",col:"rgba(239,83,80,0.06)",ac:"#ef5350",days:[
+{day:22,t:"Commentaire n°5 — annale récente",b1:{dur:"55 min",lab:"BLOC 1 — Analyse + intro",tech:"interleaving",s:[{d:"25 min",t:"🔀 Sujet tombé au vrai bac (2022‑2024) : analyse + plan + problématique"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Intro complète rédigée"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Rédaction",tech:"pomodoro",s:[{d:"25 min",t:"🍅 Axes + transitions"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Conclusion + correction complète"}]},obj:"S'entraîner uniquement sur de vraies annales en S4."},
+{day:23,t:"Consolidation ciblée",b1:{dur:"55 min",lab:"BLOC 1 — Erreurs prioritaires",tech:"recall",s:[{d:"25 min",t:"🧠 Reprendre ta liste d'erreurs · choisir les 3 plus fréquentes · refaire ces passages"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Rédiger 3 mini-exercices ciblés sur ces erreurs"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Révision espacée",tech:"spacing",s:[{d:"25 min",t:"📅 Brain dump : figures + registres + mouvements + formules · sans regarder"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Combler les oublis · recopier proprement ta fiche finale"}]},obj:"J‑7 : identifier et écraser les derniers points faibles."},
+{day:24,t:"Commentaire n°6 — simulation",b1:{dur:"55 min",lab:"BLOC 1 — Commentaire (1h30 chrono)",tech:"pomodoro",s:[{d:"55 min",t:"⏱️ Conditions bac : 1h30 chrono, sans aide — annale 2023 ou 2024."}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Correction",tech:"recall",s:[{d:"30 min",t:"🍅 Correction détaillée · noter une note + identifier les 2 dernières lacunes"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"🔗 Rédiger les passages corrigés à intégrer dans ta fiche finale"}]},obj:"Deuxième simulation complète. Mesurer la progression depuis J7."},
+{day:25,t:"Révision des fiches",b1:{dur:"55 min",lab:"BLOC 1 — Rappel actif total",tech:"recall",s:[{d:"25 min",t:"🧠 Rappel actif : toutes les fiches (figures, registres, mouvements, formules, structure)"},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Corriger · refaire les oublis à voix haute"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Application légère",tech:"interleaving",s:[{d:"30 min",t:"🔀 Sur 2 textes courts : identifier figures + registre + écrire 1 sous-partie ICEA"},{d:"5 min",t:"⏸️ Pause"},{d:"20 min",t:"📅 Relire tes 2 meilleurs commentaires · noter ce que tu sais bien faire"}]},obj:"Renforcer la confiance en mesurant ce qui est acquis."},
+{day:26,t:"Commentaire n°7 — répétition générale",b1:{dur:"55 min",lab:"BLOC 1 — Bac blanc complet",tech:"pomodoro",s:[{d:"55 min",t:"⏱️ Simulation bac sur 2h45 totales. Texte inconnu, annale récente, tout faire."}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Suite de la simulation",tech:"pomodoro",s:[{d:"55 min",t:"⏱️ Continuer le commentaire. Les 2h45 sont réparties sur J26 + 35 min début J27."}]},obj:"Ta vraie répétition générale. Traite-la exactement comme le jour J."},
+{day:27,t:"Correction répétition générale",b1:{dur:"55 min",lab:"BLOC 1 — Fin simulation + correction",tech:"recall",s:[{d:"35 min",t:"⏱️ Terminer la simulation (35 min restantes) puis lire à voix haute ta copie"},{d:"5 min",t:"⏸️ Pause"},{d:"15 min",t:"🍅 Correction avec corrigé · noter sa note estimée"}]},p:1,b2:{dur:"55 min",lab:"BLOC 2 — Bilan final",tech:"dumpBrain",s:[{d:"25 min",t:"📝 Brain dump final : tout ce que tu sais faire. Lire à voix haute ta liste de forces."},{d:"5 min",t:"⏸️ Pause"},{d:"25 min",t:"🍅 Corriger les 2‑3 derniers points faibles · fiche finale prête et imprimée"}]},obj:"À J‑3, la fiche finale est terminée. Plus rien de nouveau à apprendre."},
+{day:28,t:"Révision très légère",b1:{dur:"40 min",lab:"BLOC 1 — Relecture douce",tech:"recall",s:[{d:"20 min",t:"🧠 Relire tes fiches à voix haute. Juste relire, sans recopier."},{d:"5 min",t:"⏸️ Pause"},{d:"15 min",t:"🍅 Relire ton meilleur commentaire. Voir ce dont tu es capable."}]},p:1,b2:{dur:"20 min",lab:"BLOC 2 — Logistique",tech:"pomodoro",s:[{d:"20 min",t:"🍅 Préparer le matériel (stylos, convocation, carte d'identité). Coucher tôt."}]},obj:"Aujourd'hui : rassurer le cerveau, pas le surcharger."},
+{day:29,t:"Avant-veille",b1:{dur:"30 min",lab:"BLOC UNIQUE — Lecture légère",tech:"recall",s:[{d:"30 min",t:"🧠 Rappel actif très léger : figures × 10 + registres × 6 · uniquement à voix haute"}]},p:0,b2:null,obj:"30 min max. Le reste de la journée : marche, repas normal, coucher tôt."},
+{day:30,t:"Veille du bac",b1:{dur:"20 min",lab:"BLOC UNIQUE — Le matin",tech:"recall",s:[{d:"20 min",t:"🧠 Lire tes fiches une dernière fois le matin. 20 min et c'est fini."}]},p:0,b2:null,obj:"Après 20 min : plus rien. Tu as 29 jours de travail derrière toi. Fais confiance."}
+]}
+];
+
+/* ═══════════════ STATE ═══════════════ */
+var openWeek=0, openDay=null;
+var done=new Set();
+try{var sv=localStorage.getItem("bac30");if(sv)done=new Set(JSON.parse(sv));}catch(e){}
+function save(){try{localStorage.setItem("bac30",JSON.stringify([...done]));}catch(e){}}
+
+/* ═══════════════ SCROLL ═══════════════ */
+window.addEventListener("scroll",function(){
+  var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  document.getElementById("scrollBar").style.width=(h>0?(window.scrollY/h)*100:0)+"%";
+});
+
+/* ═══════════════ GUIDE ═══════════════ */
+function toggleGuide(){
+  var g=document.getElementById("guideGrid"),b=document.getElementById("guideBtn");
+  if(g.classList.contains("open")){g.classList.remove("open");b.textContent="📖 Voir le guide des techniques";}
+  else{g.classList.add("open");b.textContent="✕ Masquer le guide des techniques";}
+}
+function initGuide(){
+  var h="";for(var k in T){var t=T[k];
+    h+='<div class="technique-card" style="border-color:'+t.c+'22"><div class="tech-bar" style="background:'+t.c+'"></div><div class="tech-name" style="color:'+t.c+'">'+t.e+" "+t.n+'</div><div class="tech-short">'+t.s+'</div><div class="tech-desc">'+t.d+"</div></div>";}
+  document.getElementById("guideGrid").innerHTML=h;
+}
+
+/* ═══════════════ TIMELINE ═══════════════ */
+function initTimeline(){
+  var cs=["#4fc3f7","#ab47bc","#ffd54f","#ef5350"],ls=["Méthode","Outils","Intensif","Sprint"],h="";
+  for(var i=0;i<4;i++){
+    if(i>0)h+='<div class="timeline-line"></div>';
+    var active=openWeek===i;
+    h+='<div class="timeline-node" onclick="clickWeek('+i+')"><div class="dot" style="border-color:'+cs[i]+";background:"+(active?cs[i]:"var(--bg)")+'"></div><div class="tlabel" style="color:'+cs[i]+'">S'+(i+1)+" · "+ls[i]+"</div></div>";}
+  document.getElementById("timeline").innerHTML=h;
+}
+
+/* ═══════════════ HELPERS ═══════════════ */
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+
+function blocHTML(b,ac){
+  var t=T[b.tech];
+  var h='<div style="margin-bottom:14px"><div class="bloc-header"><span class="bloc-tech-badge" style="background:'+t.c+'">'+t.e+" "+t.n+'</span><span class="bloc-label">'+esc(b.lab)+'</span><span class="bloc-duree">'+b.dur+"</span></div>";
+  for(var i=0;i<b.s.length;i++){
+    var s=b.s[i],ip=s.t.indexOf("⏸️")===0;
+    h+='<div class="seance-item"><div class="seance-dot" style="background:'+(ip?"rgba(255,255,255,0.1)":ac)+'"></div><div class="seance-text'+(ip?" seance-pause":"")+'">'+esc(s.t)+"</div></div>";}
+  return h+"</div>";
+}
+
+/* ═══════════════ RENDER ═══════════════ */
+function render(){
+  var root=document.getElementById("weeksRoot"),html="";
+  for(var wi=0;wi<W.length;wi++){
+    var w=W[wi],isOpen=openWeek===wi;
+    html+='<div class="week-container"><button class="week-header'+(isOpen?" open":"")+'" onclick="clickWeek('+wi+')"><div class="wbar" style="background:'+w.ac+'"></div><div><div class="week-num" style="color:'+w.ac+'">Semaine '+w.num+'</div><div class="week-subtitle">'+esc(w.sub)+'</div></div><span class="week-arrow'+(isOpen?" open":"")+'" style="color:'+w.ac+'">▼</span></button>';
+    if(isOpen){
+      html+='<div class="week-body">';
+      for(var di=0;di<w.days.length;di++){
+        var day=w.days[di],key=wi+"-"+di,dOpen=openDay===key,t1=T[day.b1.tech],isDone=done.has(day.day);
+        var techLine=t1.e+" "+t1.n;
+        if(day.b2)techLine+=" · "+T[day.b2.tech].e+" "+T[day.b2.tech].n;
+        html+='<div class="day-row"><button class="day-header" onclick="clickDay(\''+key+'\')">';
+        html+='<div class="day-badge" style="background:'+(isDone?"rgba(102,187,106,0.3)":w.ac)+";"+(isDone?"border:2px solid var(--accent-green)":"")+'">'+(isDone?"✓":"J"+day.day)+"</div>";
+        html+='<div style="flex:1"><div class="day-title" style="'+(isDone?"text-decoration:line-through;opacity:.5":"")+'">'+esc(day.t)+'</div><div class="day-techniques" style="color:'+t1.c+'">'+techLine+"</div></div>";
+        html+='<span class="day-toggle" style="transform:rotate('+(dOpen?"45":"0")+'deg)">+</span></button>';
+        if(dOpen){
+          html+='<div class="day-content">';
+          html+=blocHTML(day.b1,w.ac);
+          if(day.p)html+='<div class="pause-box"><span class="pause-icon">☕</span><div><strong>PAUSE OBLIGATOIRE</strong><div class="pause-desc">30‑60 min · bouger, manger, pas d\'écran · le cerveau consolide pendant ce temps</div></div></div>';
+          if(day.b2)html+=blocHTML(day.b2,w.ac);
+          html+='<div class="objectif-box" style="background:'+w.col+'"><div class="obj-bar" style="background:'+w.ac+'"></div><div class="objectif-label" style="color:'+w.ac+'">🎯 Objectif du jour</div><div class="objectif-text">'+esc(day.obj)+"</div></div>";
+          html+='<button class="complete-btn'+(isDone?" done":"")+'" onclick="toggleDone('+day.day+',event)">'+(isDone?"✓ Jour terminé — cliquer pour annuler":"Marquer ce jour comme terminé")+"</button>";
+          html+="</div>";}
+        html+="</div>";}
+      html+="</div>";}
+    html+="</div>";}
+  root.innerHTML=html;
+  updateProgress();
+}
+
+function updateProgress(){
+  var pct=Math.round((done.size/30)*100);
+  document.getElementById("statPct").textContent=pct+"%";
+  document.getElementById("pCount").textContent=done.size+"/30 jours";
+  document.getElementById("pFill").style.width=pct+"%";
+}
+
+function clickWeek(i){openWeek=openWeek===i?null:i;openDay=null;initTimeline();render();}
+function clickDay(k){openDay=openDay===k?null:k;render();}
+function toggleDone(d,e){e.stopPropagation();if(done.has(d))done.delete(d);else done.add(d);save();render();}
+
+/* ═══════════════ INIT ═══════════════ */
+initGuide();
+initTimeline();
+render();
+</script>
+</body>
+</html>
