@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche de Révision – Intégration et Calcul d'Aires</title>
     
-    <!-- Lien vers ton fichier CSS existant -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Fichier CSS existant -->
+    <link rel="stylesheet" href="/fiches/styles.css">
 
-    <!-- Configuration de MathJax (active le $...$ en inline) -->
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']]
-    }
-  };
-</script>
-
-<!-- Chargement direct de MathJax v3 via cdnjs -->
-<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    <!-- Configuration MathJax avec support inline $ et display $$ -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 </head>
 <body>
 
@@ -96,7 +95,7 @@
     </div>
 
     <div class="formula-box">
-        <div class="formula">\int_{a}^{b} f(x) \, \mathrm{d}x = \text{Aire sous la courbe (en u.a.)}</div>
+        <div class="formula">$$\int_{a}^{b} f(x) \, \mathrm{d}x = \text{Aire sous la courbe (en u.a.)}$$</div>
         <div class="formula-desc">$a$ est la <strong>borne inférieure</strong> et $b$ est la <strong>borne supérieure</strong>.</div>
     </div>
 
@@ -111,7 +110,7 @@
         <p>Soit $f(x) = -x + 2$ sur $[0; 1]$. La fonction est positive sur cet intervalle.<br>
         La surface sous la courbe est un <strong>trapèze</strong> de sommets $(0;0)$, $(1;0)$, $(1;1)$ et $(0;2)$.</p>
         <div class="formula-box" style="margin-top:10px;">
-            <div class="formula" style="font-size:1.1rem; color:var(--accent-gold);">\int_{0}^{1} f(x) \, \mathrm{d}x = \frac{\text{Petite base} + \text{Grande base}}{2} \times \text{Hauteur} = \frac{1 + 2}{2} \times 1 = 1,5 \text{ u.a.}</div>
+            <div class="formula" style="font-size:1.1rem; color:var(--accent-gold);">$$\int_{0}^{1} f(x) \, \mathrm{d}x = \frac{\text{Petite base} + \text{Grande base}}{2} \times \text{Hauteur} = \frac{1 + 2}{2} \times 1 = 1,5 \text{ u.a.}$$</div>
         </div>
     </div>
 </div>
@@ -130,7 +129,7 @@
         <h3>🔻 Fonction Négative sur $[a; b]$</h3>
         <p>Si $f$ est une fonction <strong>négative</strong> ($f(x) \leqslant 0$) sur $[a; b]$, l'intégrale est égale à <strong>l'opposé de l'aire</strong> de la surface $S$ délimitée par la courbe et l'axe des abscisses :</p>
         <div class="formula-box" style="background: rgba(239,83,80,0.06); border-color: rgba(239,83,80,0.2);">
-            <div class="formula" style="color: var(--accent-red);">\int_{a}^{b} f(x) \, \mathrm{d}x = -\text{Aire}(S)</div>
+            <div class="formula" style="color: var(--accent-red);">$$\int_{a}^{b} f(x) \, \mathrm{d}x = -\text{Aire}(S)$$</div>
         </div>
         <p style="font-size:0.85rem;"><em>Exemple :</em> Si $f(x) = -1$ sur $[0; 2]$, l'aire vaut $2$ u.a., donc $\int_{0}^{2} (-1) \mathrm{d}x = -2$.</p>
     </div>
@@ -177,7 +176,7 @@
             </div>
         </div>
         <div class="formula-box">
-            <div class="formula">m = \frac{1}{b - a} \int_{a}^{b} f(x) \, \mathrm{d}x</div>
+            <div class="formula">$$m = \frac{1}{b - a} \int_{a}^{b} f(x) \, \mathrm{d}x$$</div>
             <div class="formula-desc">Équivalent à : $m(b - a) = \int_{a}^{b} f(x) \mathrm{d}x$</div>
         </div>
         <p style="margin-top:10px;"><strong>Interprétation géométrique :</strong> Pour une fonction positive, $m$ représente la <em>hauteur d'un rectangle</em> de base $(b - a)$ qui a exactement la même aire que la surface sous la courbe.</p>
@@ -251,7 +250,7 @@
         <h3><span class="tag green">Capacité 4</span> Encadrer une intégrale</h3>
         <p><strong>Principe :</strong> Si on sait que pour tout $x \in [a; b]$, $m \leqslant f(x) \leqslant M$, alors en intégrant l'encadrement sur $[a; b]$ :</p>
         <div class="formula-box" style="background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.2);">
-            <div class="formula" style="color:var(--accent-green);">m(b - a) \leqslant \int_{a}^{b} f(x) \, \mathrm{d}x \leqslant M(b - a)</div>
+            <div class="formula" style="color:var(--accent-green);">$$m(b - a) \leqslant \int_{a}^{b} f(x) \, \mathrm{d}x \leqslant M(b - a)$$</div>
         </div>
         <p><strong>Exemple :</strong> Si $2 \leqslant f(x) \leqslant 5$ sur $[-1; 3]$ (longueur $b - a = 3 - (-1) = 4$) :<br>
         $$2 \times 4 \leqslant \int_{-1}^{3} f(x) \, \mathrm{d}x \leqslant 5 \times 4 \implies \mathbf{8 \leqslant \int_{-1}^{3} f(x) \, \mathrm{d}x \leqslant 20}$$</p>
@@ -304,7 +303,7 @@
         <div class="answer-reveal" onclick="revealAnswer(this)">
             <div class="click-hint">👆 Cliquez pour révéler</div>
             <div class="answer-text">
-                <strong style="color: var(--accent-gold); font-size:1.1rem;">m = \frac{1}{b-a} \int_{a}^{b} f(x) \mathrm{d}x</strong>
+                <strong style="color: var(--accent-gold); font-size:1.1rem;">$$m = \frac{1}{b-a} \int_{a}^{b} f(x) \mathrm{d}x$$</strong>
             </div>
         </div>
     </div>
