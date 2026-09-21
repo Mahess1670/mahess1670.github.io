@@ -6,11 +6,19 @@
     <title>Fiche de Révision – Intégration et Calcul d'Aires</title>
     
     <!-- Lien vers ton fichier CSS existant -->
-    <link rel="stylesheet" href="/fiches/styles.css">
+    <link rel="stylesheet" href="styles.css">
 
-    <!-- Chargement de MathJax pour l'affichage propre des formules mathématiques -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Configuration de MathJax (active le $...$ en inline) -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<!-- Chargement direct de MathJax v3 via cdnjs -->
+<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 </head>
 <body>
 
