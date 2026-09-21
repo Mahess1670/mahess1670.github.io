@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Révision – Intégration et Calcul d'Aires</title>
+    <!-- Chargement de MathJax pour les formules LaTeX -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
+        :root {
+            --bg: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --card-hover: #22223a;
+            --accent-blue: #4fc3f7;
+            --accent-red: #ef5350;
+            --accent-gold: #ffd54f;
+            --accent-green: #66bb6a;
+            --accent-purple: #ab47bc;
+            --accent-orange: #ffa726;
+            --text: #e8e8f0;
+            --text-muted: #9e9eb8;
+            --border: rgba(255,255,255,0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(79,195,247,0.04) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(171,71,188,0.04) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(239,83,80,0.03) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            33% { transform: translate(2%,-2%) rotate(1deg); }
+            66% { transform: translate(-1%,1%) rotate(-1deg); }
+        }
+
+        /* HEADER */
+        .hero { text-align: center; padding: 60px 20px 40px; position: relative; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #fff; font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            padding: 6px 20px; border-radius: 30px; margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-blue) 50%, var(--accent-gold) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 10px;
+        }
+        .hero p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        /* TIMELINE */
+        .timeline-bar {
+            display: flex; justify-content: center; align-items: center;
+            gap: 0; margin: 30px auto; max-width: 750px; padding: 0 20px;
+        }
+        .timeline-node { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+        .timeline-node .dot {
+            width: 18px; height: 18px; border-radius: 50%; border: 3px solid;
+            background: var(--bg); transition: transform 0.3s;
+        }
+        .timeline-node:hover .dot { transform: scale(1.3); }
+        .timeline-node .label { font-size: 0.7rem; font-weight: 700; margin-top: 6px; white-space: nowrap; }
+        .timeline-line {
+            flex: 1; height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+            opacity: 0.4; min-width: 25px;
+        }
+
+        /* NAV */
+        .nav-tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 10px 20px 30px; }
+        .nav-tab {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 10px 22px; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .nav-tab::before {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 3px; background: var(--accent-blue);
+            transform: scaleX(0); transition: transform 0.3s;
+        }
+        .nav-tab:hover, .nav-tab.active { color: #fff; border-color: rgba(79,195,247,0.3); background: rgba(79,195,247,0.08); }
+        .nav-tab:hover::before, .nav-tab.active::before { transform: scaleX(1); }
+
+        /* SECTIONS */
+        .section { max-width: 900px; margin: 0 auto 50px; padding: 0 20px; animation: fadeUp 0.6s ease-out; }
+        .section.hidden { display: none; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .section-icon {
+            width: 50px; height: 50px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; flex-shrink: 0;
+        }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; }
+        .section-header .subtitle { font-size: 0.8rem; color: var(--text-muted); font-family: 'Inter', sans-serif; font-weight: 400; }
+
+        /* CARDS */
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 25px; margin-bottom: 16px;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; border-radius: 4px 0 0 4px;
+        }
+        .card:hover {
+            background: var(--card-hover); border-color: rgba(255,255,255,0.1);
+            transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card p, .card li { color: var(--text-muted); font-size: 0.92rem; line-height: 1.8; }
+        .card ul { list-style: none; padding: 0; }
+        .card ul li { padding: 6px 0 6px 24px; position: relative; }
+        .card ul li::before { content: '→'; position: absolute; left: 0; font-weight: 700; }
+
+        .card.blue::before { background: var(--accent-blue); }
+        .card.blue h3 { color: var(--accent-blue); }
+        .card.blue ul li::before { color: var(--accent-blue); }
+        .card.red::before { background: var(--accent-red); }
+        .card.red h3 { color: var(--accent-red); }
+        .card.red ul li::before { color: var(--accent-red); }
+        .card.gold::before { background: var(--accent-gold); }
+        .card.gold h3 { color: var(--accent-gold); }
+        .card.gold ul li::before { color: var(--accent-gold); }
+        .card.green::before { background: var(--accent-green); }
+        .card.green h3 { color: var(--accent-green); }
+        .card.green ul li::before { color: var(--accent-green); }
+        .card.purple::before { background: var(--accent-purple); }
+        .card.purple h3 { color: var(--accent-purple); }
+        .card.purple ul li::before { color: var(--accent-purple); }
+        .card.orange::before { background: var(--accent-orange); }
+        .card.orange h3 { color: var(--accent-orange); }
+        .card.orange ul li::before { color: var(--accent-orange); }
+
+        /* DEF BOX */
+        .def-box {
+            background: rgba(171,71,188,0.08); border: 1px solid rgba(171,71,188,0.2);
+            border-radius: 12px; padding: 16px 20px; margin: 12px 0;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .def-box .def-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+        .def-box strong { color: var(--accent-purple); }
+        .def-box p { font-size: 0.88rem; color: var(--text-muted); }
+
+        /* FORMULA BOX */
+        .formula-box {
+            background: rgba(79,195,247,0.06); border: 1px solid rgba(79,195,247,0.2);
+            border-radius: 14px; padding: 18px 24px; margin: 14px 0; text-align: center;
+        }
+        .formula-box .formula {
+            font-size: 1.25rem; font-weight: 800; color: var(--accent-blue);
+            letter-spacing: 0.5px; margin-bottom: 6px;
+        }
+        .formula-box .formula-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+        /* HIGHLIGHTS */
+        .highlight { color: #fff; font-weight: 600; }
+        .hl-blue { color: var(--accent-blue); }
+        .hl-red { color: var(--accent-red); }
+        .hl-gold { color: var(--accent-gold); }
+        .hl-green { color: var(--accent-green); }
+        .hl-purple { color: var(--accent-purple); }
+        .hl-orange { color: var(--accent-orange); }
+
+        /* NOTE BOX */
+        .note-box {
+            background: rgba(255,213,79,0.06); border: 1px solid rgba(255,213,79,0.2);
+            border-radius: 12px; padding: 14px 18px; margin: 12px 0;
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+        .note-box .note-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .note-box p { font-size: 0.85rem; color: var(--text-muted); }
+        .note-box strong { color: var(--accent-gold); }
+
+        /* TAG */
+        .tag {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: 8px;
+        }
+        .tag.blue { background: rgba(79,195,247,0.15); color: var(--accent-blue); }
+        .tag.gold { background: rgba(255,213,79,0.15); color: var(--accent-gold); }
+        .tag.green { background: rgba(102,187,106,0.15); color: var(--accent-green); }
+        .tag.purple { background: rgba(171,71,188,0.15); color: var(--accent-purple); }
+
+        /* QUIZ */
+        .quiz-card {
+            background: linear-gradient(135deg, rgba(79,195,247,0.08), rgba(171,71,188,0.08));
+            border: 1px solid rgba(79,195,247,0.15); border-radius: 16px; padding: 25px; margin-bottom: 14px;
+        }
+        .quiz-card .question { font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .quiz-card .question .q-num {
+            background: var(--accent-blue); color: #000; font-size: 0.75rem; font-weight: 800;
+            width: 24px; height: 24px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .answer-reveal {
+            background: rgba(0,0,0,0.3); border-radius: 10px; padding: 14px 18px;
+            font-size: 0.88rem; color: var(--text-muted); cursor: pointer;
+            transition: all 0.3s; position: relative; overflow: hidden; min-height: 50px;
+        }
+        .answer-reveal .answer-text { opacity: 0; transition: opacity 0.3s; }
+        .answer-reveal .click-hint {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 0.8rem; color: var(--accent-blue); font-weight: 600; transition: opacity 0.3s;
+        }
+        .answer-reveal.revealed .answer-text { opacity: 1; }
+        .answer-reveal.revealed .click-hint { opacity: 0; }
+        .answer-reveal:hover { background: rgba(79,195,247,0.06); }
+
+        /* PROGRESS BAR */
+        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 1000; background: rgba(255,255,255,0.05); }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-gold)); width: 0%; transition: width 0.1s; }
+
+        /* FOOTER */
+        .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        @media (max-width: 600px) {
+            .timeline-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-badge">Mathématiques · Terminale</div>
+    <h1>Intégration & Calcul d'Aires</h1>
+    <p>Fiche de révision interactive complète · Définitions, Propriétés, Valeur Moyenne et Capacités 1 à 4</p>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-bar">
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-blue);"></div>
+        <div class="label" style="color: var(--accent-blue);">1. Positive</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-purple);"></div>
+        <div class="label" style="color: var(--accent-purple);">2. Négative / Prop.</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-gold);"></div>
+        <div class="label" style="color: var(--accent-gold);">3. Moyenne & Aires</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-orange);"></div>
+        <div class="label" style="color: var(--accent-orange);">4. Capacités 1-4</div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-node">
+        <div class="dot" style="border-color: var(--accent-green);"></div>
+        <div class="label" style="color: var(--accent-green);">Quiz</div>
+    </div>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('cours1')">📈 Cours 1 : Fonction Positive</button>
+    <button class="nav-tab" onclick="showSection('cours2')">📉 Cours 2 : Fonction Négative & Prop.</button>
+    <button class="nav-tab" onclick="showSection('cours3')">📐 Cours 3 : Valeur Moyenne & Aires</button>
+    <button class="nav-tab" onclick="showSection('capacites')">🎯 Capacités 1 à 4</button>
+    <button class="nav-tab" onclick="showSection('quiz')">⚡ Quiz Rapide</button>
+</nav>
+
+<!-- ===================== SECTION 1 : COURS 1 ===================== -->
+<div class="section" id="cours1">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(79,195,247,0.12);">📈</div>
+        <div>
+            <h2 style="color: var(--accent-blue);">Cours 1 : Intégrale d'une fonction positive</h2>
+            <div class="subtitle">Définition fondamentale, unité d'aire et variable muette</div>
+        </div>
+    </div>
+
+    <div class="card blue">
+        <h3>📏 Unité d'Aire (u.a.)</h3>
+        <p>Dans un repère orthogonal $(O; I, J)$, l'<strong>unité d'aire (u.a.)</strong> est définie comme l'aire du rectangle formé par l'origine $O$ et les points $I(1;0)$ et $J(0;1)$.</p>
+    </div>
+
+    <div class="def-box">
+        <div class="def-icon">📌</div>
+        <div>
+            <strong>Définition — Intégrale d'une fonction positive</strong>
+            <p style="margin-top:6px;">Soit $f$ une fonction <strong>positive</strong> ($f(x) \geqslant 0$) sur un intervalle $[a; b]$.<br>
+            On appelle <strong>intégrale de $f$ entre $a$ et $b$</strong> l'aire (en unités d'aire) de la surface délimitée par la courbe $\mathcal{C}$, l'axe des abscisses, et les droites d'équations $x = a$ et $x = b$.</p>
+        </div>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula">\int_{a}^{b} f(x) \, \mathrm{d}x = \text{Aire sous la courbe (en u.a.)}</div>
+        <div class="formula-desc">$a$ est la <strong>borne inférieure</strong> et $b$ est la <strong>borne supérieure</strong>.</div>
+    </div>
+
+    <div class="note-box">
+        <div class="note-icon">💡</div>
+        <p><strong>Notion de Variable Muette :</strong> La lettre $x$ dans $\int_{a}^{b} f(x)\mathrm{d}x$ n'a pas d'importance. On peut la remplacer par n'importe quelle autre variable sans changer la valeur :<br>
+        $$\int_{a}^{b} f(x) \, \mathrm{d}x = \int_{a}^{b} f(t) \, \mathrm{d}t = \int_{a}^{b} f(u) \, \mathrm{d}u$$</p>
+    </div>
+
+    <div class="card gold">
+        <h3>📐 Exemple Concret (Méthode Géométrique)</h3>
+        <p>Soit $f(x) = -x + 2$ sur $[0; 1]$. La fonction est positive sur cet intervalle.<br>
+        La surface sous la courbe est un <strong>trapèze</strong> de sommets $(0;0)$, $(1;0)$, $(1;1)$ et $(0;2)$.</p>
+        <div class="formula-box" style="margin-top:10px;">
+            <div class="formula" style="font-size:1.1rem; color:var(--accent-gold);">\int_{0}^{1} f(x) \, \mathrm{d}x = \frac{\text{Petite base} + \text{Grande base}}{2} \times \text{Hauteur} = \frac{1 + 2}{2} \times 1 = 1,5 \text{ u.a.}</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== SECTION 2 : COURS 2 ===================== -->
+<div class="section hidden" id="cours2">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(171,71,188,0.12);">📉</div>
+        <div>
+            <h2 style="color: var(--accent-purple);">Cours 2 : Fonction négative et Propriétés</h2>
+            <div class="subtitle">Extension géométrique, linéarité, Chasles et ordre</div>
+        </div>
+    </div>
+
+    <div class="card red">
+        <h3>🔻 Fonction Négative sur $[a; b]$</h3>
+        <p>Si $f$ est une fonction <strong>négative</strong> ($f(x) \leqslant 0$) sur $[a; b]$, l'intégrale est égale à <strong>l'opposé de l'aire</strong> de la surface $S$ délimitée par la courbe et l'axe des abscisses :</p>
+        <div class="formula-box" style="background: rgba(239,83,80,0.06); border-color: rgba(239,83,80,0.2);">
+            <div class="formula" style="color: var(--accent-red);">\int_{a}^{b} f(x) \, \mathrm{d}x = -\text{Aire}(S)</div>
+        </div>
+        <p style="font-size:0.85rem;"><em>Exemple :</em> Si $f(x) = -1$ sur $[0; 2]$, l'aire vaut $2$ u.a., donc $\int_{0}^{2} (-1) \mathrm{d}x = -2$.</p>
+    </div>
+
+    <div class="card purple">
+        <h3>⚡ Convention des Bornes</h3>
+        <ul>
+            <li>Inversion des bornes : $$\int_{b}^{a} f(x) \, \mathrm{d}x = -\int_{a}^{b} f(x) \, \mathrm{d}x$$</li>
+            <li>Bornes identiques : $$\int_{a}^{a} f(x) \, \mathrm{d}x = 0$$</li>
+        </ul>
+    </div>
+
+    <div class="card gold">
+        <h3>📜 Propriétés Algébriques de l'Intégrale</h3>
+        <p style="margin-bottom:10px;">Soient $f$ et $g$ deux fonctions continues, et $k$ un nombre réel :</p>
+        <ul>
+            <li><strong>Intégrale d'une constante :</strong> $$\int_{a}^{b} k \, \mathrm{d}x = k(b - a)$$</li>
+            <li><strong>Linéarité :</strong> $$\int_{a}^{b} (f(x) + g(x)) \, \mathrm{d}x = \int_{a}^{b} f(x) \, \mathrm{d}x + \int_{a}^{b} g(x) \, \mathrm{d}x$$
+            $$\int_{a}^{b} k \cdot f(x) \, \mathrm{d}x = k \int_{a}^{b} f(x) \, \mathrm{d}x$$</li>
+            <li><strong>Relation de Chasles :</strong> $$\int_{a}^{c} f(x) \, \mathrm{d}x + \int_{c}^{b} f(x) \, \mathrm{d}x = \int_{a}^{b} f(x) \, \mathrm{d}x$$</li>
+            <li><strong>Positivité :</strong> Si pour tout $x \in [a; b]$, $f(x) \geqslant 0$, alors $$\int_{a}^{b} f(x) \, \mathrm{d}x \geqslant 0$$</li>
+            <li><strong>Croissance de l'intégrale :</strong> Si pour tout $x \in [a; b]$, $f(x) \leqslant g(x)$, alors $$\int_{a}^{b} f(x) \, \mathrm{d}x \leqslant \int_{a}^{b} g(x) \, \mathrm{d}x$$</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ===================== SECTION 3 : COURS 3 ===================== -->
+<div class="section hidden" id="cours3">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(255,213,79,0.12);">📐</div>
+        <div>
+            <h2 style="color: var(--accent-gold);">Cours 3 : Valeur Moyenne & Calculs d'Aires</h2>
+            <div class="subtitle">Interprétation physique/géométrique et aire entre deux courbes</div>
+        </div>
+    </div>
+
+    <div class="card blue">
+        <h3>📊 Valeur Moyenne d'une Fonction</h3>
+        <div class="def-box">
+            <div class="def-icon">📌</div>
+            <div>
+                <strong>Définition</strong>
+                <p>Pour toute fonction $f$ continue sur $[a; b]$ ($a \neq b$), la <strong>valeur moyenne</strong> $m$ de $f$ sur $[a; b]$ est :</p>
+            </div>
+        </div>
+        <div class="formula-box">
+            <div class="formula">m = \frac{1}{b - a} \int_{a}^{b} f(x) \, \mathrm{d}x</div>
+            <div class="formula-desc">Équivalent à : $m(b - a) = \int_{a}^{b} f(x) \mathrm{d}x$</div>
+        </div>
+        <p style="margin-top:10px;"><strong>Interprétation géométrique :</strong> Pour une fonction positive, $m$ représente la <em>hauteur d'un rectangle</em> de base $(b - a)$ qui a exactement la même aire que la surface sous la courbe.</p>
+        <p style="margin-top:6px;"><strong>Application Physique :</strong> La vitesse moyenne d'un mobile entre $t_1$ et $t_2$ est $v_{\text{moy}} = \frac{1}{t_2 - t_1} \int_{t_1}^{t_2} v(t) \, \mathrm{d}t$.</p>
+    </div>
+
+    <div class="card green">
+        <h3>🖼️ Applications au Calcul d'Aires</h3>
+        <ul>
+            <li><strong>Surface sous une courbe négative ($f \leqslant 0$) :</strong><br>
+            L'aire géométrique (toujours positive) est donnée par :
+            $$\text{Aire} = -\int_{a}^{b} f(x) \, \mathrm{d}x$$</li>
+            
+            <li><strong>Aire entre deux courbes ($\mathcal{C}_f$ et $\mathcal{C}_g$) :</strong><br>
+            Si pour tout $x \in [a; b]$, $f(x) \leqslant g(x)$ (la courbe de $g$ est situées au-dessus de celle de $f$) :
+            $$\text{Aire} = \int_{a}^{b} (g(x) - f(x)) \, \mathrm{d}x$$</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ===================== SECTION 4 : CAPACITES ===================== -->
+<div class="section hidden" id="capacites">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(255,167,38,0.12);">🎯</div>
+        <div>
+            <h2 style="color: var(--accent-orange);">Capacités-Clés du Cours (1 à 4)</h2>
+            <div class="subtitle">Méthodes opérationnelles pour réussir les exercices types</div>
+        </div>
+    </div>
+
+    <!-- CAPACITÉ 1 -->
+    <div class="card blue">
+        <h3><span class="tag blue">Capacité 1</span> Estimer graphiquement une intégrale</h3>
+        <p><strong>Méthode :</strong></p>
+        <ul>
+            <li>Vérifier le signe de la fonction pour savoir si l'intégrale est positive ou négative.</li>
+            <li>Compter le nombre de carreaux (unités d'aire) sous la courbe.</li>
+            <li>Pour un encadrement par deux entiers, compter les carreaux entiers totalement contenus (borne inf.) et les carreaux recouvrant la courbe (borne sup.).</li>
+        </ul>
+    </div>
+
+    <!-- CAPACITÉ 2 -->
+    <div class="card purple">
+        <h3><span class="tag purple">Capacité 2</span> Signe et interprétation graphique</h3>
+        <p><strong>Méthode :</strong></p>
+        <ul>
+            <li>Si $\mathcal{C}_f$ est au-dessus de l'axe des abscisses $\implies \int_{a}^{b} f(x)\mathrm{d}x > 0$.</li>
+            <li>Si $\mathcal{C}_f$ est en dessous de l'axe des abscisses $\implies \int_{a}^{b} f(x)\mathrm{d}x < 0$.</li>
+            <li>Si la courbe passe au-dessus et en dessous, on découpe avec la relation de Chasles : $\text{Aire}_{\text{haut}} - \text{Aire}_{\text{bas}}$.</li>
+        </ul>
+    </div>
+
+    <!-- CAPACITÉ 3 -->
+    <div class="card gold">
+        <h3><span class="tag gold">Capacité 3</span> Utiliser les propriétés de l'intégrale</h3>
+        <p><strong>Exemple résolu :</strong> Sachant que $\int_{-2}^{0} f(x)\mathrm{d}x = 5$, $\int_{0}^{4} f(x)\mathrm{d}x = -2$ et $\int_{-2}^{4} g(x)\mathrm{d}x = 2$ :</p>
+        <ul style="margin-top:8px;">
+            <li><strong>Calculer $\int_{-2}^{4} f(x)\mathrm{d}x$ :</strong><br>
+            Par Chasles : $\int_{-2}^{0} f(x)\mathrm{d}x + \int_{0}^{4} f(x)\mathrm{d}x = 5 + (-2) = \mathbf{3}$.</li>
+            
+            <li><strong>Calculer $\int_{-2}^{4} (3f(x) - 2g(x))\mathrm{d}x$ :</strong><br>
+            Par linéarité : $3\int_{-2}^{4} f(x)\mathrm{d}x - 2\int_{-2}^{4} g(x)\mathrm{d}x = 3(3) - 2(2) = 9 - 4 = \mathbf{5}$.</li>
+
+            <li><strong>Inversion de bornes $\int_{4}^{-2} f(x)\mathrm{d}x$ :</strong><br>
+            $-\int_{-2}^{4} f(x)\mathrm{d}x = \mathbf{-3}$.</li>
+        </ul>
+    </div>
+
+    <!-- CAPACITÉ 4 -->
+    <div class="card green">
+        <h3><span class="tag green">Capacité 4</span> Encadrer une intégrale</h3>
+        <p><strong>Principe :</strong> Si on sait que pour tout $x \in [a; b]$, $m \leqslant f(x) \leqslant M$, alors en intégrant l'encadrement sur $[a; b]$ :</p>
+        <div class="formula-box" style="background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.2);">
+            <div class="formula" style="color:var(--accent-green);">m(b - a) \leqslant \int_{a}^{b} f(x) \, \mathrm{d}x \leqslant M(b - a)</div>
+        </div>
+        <p><strong>Exemple :</strong> Si $2 \leqslant f(x) \leqslant 5$ sur $[-1; 3]$ (longueur $b - a = 3 - (-1) = 4$) :<br>
+        $$2 \times 4 \leqslant \int_{-1}^{3} f(x) \, \mathrm{d}x \leqslant 5 \times 4 \implies \mathbf{8 \leqslant \int_{-1}^{3} f(x) \, \mathrm{d}x \leqslant 20}$$</p>
+    </div>
+</div>
+
+<!-- ===================== SECTION 5 : QUIZ ===================== -->
+<div class="section hidden" id="quiz">
+    <div class="section-header">
+        <div class="section-icon" style="background: rgba(79,195,247,0.12);">⚡</div>
+        <div>
+            <h2 style="color: var(--accent-blue);">Quiz de Vérification</h2>
+            <div class="subtitle">Clique sur les cartes pour afficher les réponses</div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">1</div>
+            <span>Que vaut $\int_{a}^{a} f(x) \mathrm{d}x$ ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Cliquez pour révéler</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold); font-size:1.1rem;">0</strong><br>
+                L'intervalle d'intégration est de longueur nulle, la surface est donc égale à 0.
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">2</div>
+            <span>Si $f(x) \leqslant 0$ sur $[1; 4]$ et que l'aire géométrique sous l'axe est de $5\text{ u.a.}$, que vaut $\int_{1}^{4} f(x)\mathrm{d}x$ ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Cliquez pour révéler</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold); font-size:1.1rem;">-5</strong><br>
+                Quand une fonction est négative, son intégrale est l'opposé de l'aire sous la courbe.
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">3</div>
+            <span>Quelle est la formule de la valeur moyenne $m$ d'une fonction $f$ sur $[a; b]$ ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Cliquez pour révéler</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold); font-size:1.1rem;">m = \frac{1}{b-a} \int_{a}^{b} f(x) \mathrm{d}x</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="question">
+            <div class="q-num">4</div>
+            <span>Si $\int_{1}^{3} f(x)\mathrm{d}x = 4$, que vaut $\int_{3}^{1} f(x)\mathrm{d}x$ ?</span>
+        </div>
+        <div class="answer-reveal" onclick="revealAnswer(this)">
+            <div class="click-hint">👆 Cliquez pour révéler</div>
+            <div class="answer-text">
+                <strong style="color: var(--accent-gold); font-size:1.1rem;">-4</strong><br>
+                Inverser les bornes d'intégration change le signe de l'intégrale.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>📚 Fiche de révision interactive · Chapitre Intégration · Terminale Mathématiques</p>
+</div>
+
+<script>
+    // PROGRESS BAR
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    // NAV TABS
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+        const section = document.getElementById(id);
+        section.classList.remove('hidden');
+        section.style.animation = 'none';
+        section.offsetHeight; // retrigger animation
+        section.style.animation = '';
+
+        event.target.classList.add('active');
+        window.scrollTo({ top: 160, behavior: 'smooth' });
+    }
+
+    // QUIZ REVEAL
+    function revealAnswer(el) {
+        el.classList.toggle('revealed');
+    }
+</script>
+</body>
+</html>
+```eof
+
+J'ai généré le fichier HTML complet contenant toute la structure, les styles CSS de ton modèle, le moteur MathJax pour le rendu propre des intégrales LaTeX, et les fonctionnalités interactives. Tu peux ouvrir directement ce fichier dans ton navigateur !
